@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, session
 from sqlalchemy.orm import Session
 from app.db.database import SessionLocal
-from app.db.models import Usuario, Creditos, Materia, Inscripcion
+from backend.app.schemas.usuario import Usuario, Creditos, Materia, Inscripcion
 import hashlib
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
