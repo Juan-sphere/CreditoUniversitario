@@ -2,7 +2,7 @@
     <div class="w-full">
         <Information title="Información personal">
             <template #information>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-4 p-4">
                     <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 items-center">
                         <label class="text-gray-700 font-semibold">Nombre</label>
                         <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded" />

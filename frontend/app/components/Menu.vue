@@ -1,6 +1,8 @@
 <template>
-    <div class="border-2 border-primary flex flex-col items-start">
-        <NuxtLink v-for="item in menuItems" :key="item.label" :to="item.path" class="item py-1 px-4 hover:bg-secondary w-full h-full hover:text-white" active-class="bg-secondary text-white">
+    <div class="border-2 border-primary flex flex-col items-start h-fit">
+        <NuxtLink v-for="item in menuItems" :key="item.label" :to="item.path"
+            class="item py-1 px-4 hover:bg-secondary w-full h-full hover:text-white"
+            active-class="bg-secondary text-white">
             {{ item.label }}
         </NuxtLink>
     </div>
@@ -24,6 +26,4 @@ const menuItems = [
 ]
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -4,7 +4,7 @@
        <div class="bg-secondary p-2">
           <h2 class="text-lg font-bold ">{{ title }}</h2>
        </div>
-         <div class="border border-gray-400 p-4">
+         <div class="border border-gray-400 ">
             <slot name="information"></slot>
          </div>
         </div>
