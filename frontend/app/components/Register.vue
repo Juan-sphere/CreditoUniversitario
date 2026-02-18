@@ -24,7 +24,7 @@
       </div>
     </div>
     <div>
-      <div class="bg-white py-5">
+      <div class="bg-yellow-100">
         <slot name="register">
           <p class="text-yellow-500 p-5">
             Aviso! No Existen registros para la consulta...
