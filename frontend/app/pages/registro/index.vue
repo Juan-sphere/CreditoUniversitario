@@ -3,14 +3,25 @@
     class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4"
   >
     <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
-      <!-- Header -->
       <div class="text-center mb-8">
-        <h2 class="text-3xl font-bold text-gray-900">Iniciar Sesión</h2>
-        <p class="mt-2 text-sm text-gray-600">Accede a tu cuenta</p>
+        <h2 class="text-3xl font-bold text-gray-900">Crear Cuenta</h2>
+        <p class="mt-2 text-sm text-gray-600">Regístrate en el sistema</p>
       </div>
 
-      <!-- Formulario -->
-      <form @submit.prevent="loginConEmail" class="space-y-5">
+      <form @submit.prevent="registrarConEmail" class="space-y-5">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Nombre Completo</label
+          >
+          <input
+            v-model="form.nombre"
+            type="text"
+            required
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+            placeholder="Juan Pérez"
+          />
+        </div>
+
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1"
             >Email</label
@@ -33,11 +44,10 @@
             type="password"
             required
             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-            placeholder="••••••••"
+            placeholder="Mínimo 6 caracteres"
           />
         </div>
 
-        <!-- Error -->
         <div
           v-if="error"
           class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"
@@ -45,25 +55,30 @@
           {{ error }}
         </div>
 
-        <!-- Botón submit -->
+        <div
+          v-if="success"
+          class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm"
+        >
+          {{ success }}
+        </div>
+
         <button
           type="submit"
           :disabled="loading"
           class="w-full py-3 px-4 bg-primary text-white rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50"
         >
-          <span v-if="!loading">INICIAR SESIÓN</span>
-          <span v-else>Cargando...</span>
+          <span v-if="!loading">CREAR CUENTA</span>
+          <span v-else>Creando...</span>
         </button>
       </form>
 
-      <!-- Link registro -->
       <p class="mt-6 text-center text-sm text-gray-600">
-        ¿No tienes cuenta?
+        ¿Ya tienes cuenta?
         <router-link
-          to="registro"
+          to="/auth/login"
           class="text-primary font-medium hover:underline"
         >
-          Regístrate aquí
+          Inicia sesión
         </router-link>
       </p>
     </div>
@@ -79,19 +94,22 @@ definePageMeta({
 });
 
 const router = useRouter();
-const form = ref({ email: "", password: "" });
+const form = ref({ nombre: "", email: "", password: "" });
 const error = ref("");
+const success = ref("");
 const loading = ref(false);
 
-async function loginConEmail() {
+async function registrarConEmail() {
   error.value = "";
+  success.value = "";
   loading.value = true;
 
   try {
-    const response = await fetch("http://localhost:5000/auth/login", {
+    const response = await fetch("http://localhost:5000/auth/registro", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        nombre: form.value.nombre,
         email: form.value.email,
         contraseña: form.value.password,
       }),
@@ -100,11 +118,15 @@ async function loginConEmail() {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.detail || "Error al iniciar sesión");
+      throw new Error(data.detail || "Error al registrar");
     }
 
+    success.value = "Cuenta creada! Redirigiendo...";
     localStorage.setItem("usuario", JSON.stringify(data.usuario));
-    router.push("/instrucciones");
+
+    setTimeout(() => {
+      router.push("/instrucciones");
+    }, 1500);
   } catch (err: any) {
     error.value = err.message;
   } finally {
