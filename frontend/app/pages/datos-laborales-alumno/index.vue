@@ -18,18 +18,22 @@
                         <!-- Fila 1 -->
                         <div class="grid grid-cols-3 gap-4">
                             <div>
-                                <label class="font-semibold text-sm">Estado laboral <span class="text-red-500">(*)</span></label>
-                                <select v-model="form.estadoLaboral" class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
+                                <label class="font-semibold text-sm">Estado laboral <span
+                                        class="text-red-500">(*)</span></label>
+                                <select v-model="form.estadoLaboral"
+                                    class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
                                     <option value="">--Seleccione--</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="font-semibold text-sm">Remuneración neta Mensual</label>
-                                <input v-model="form.remuneracion" type="text" class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
+                                <input v-model="form.remuneracion" type="text"
+                                    class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
                             </div>
                             <div>
                                 <label class="font-semibold text-sm">Emite recibos por honorarios?</label>
-                                <select v-model="form.emiteRecibos" class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
+                                <select v-model="form.emiteRecibos"
+                                    class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
                                     <option value="">--Seleccione--</option>
                                 </select>
                             </div>
@@ -39,11 +43,14 @@
                         <div class="grid grid-cols-3 gap-4">
                             <div>
                                 <label class="font-semibold text-sm">Número (R.U.C.)/(R.U.S.)</label>
-                                <input v-model="form.ruc" type="text" class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
+                                <input v-model="form.ruc" type="text"
+                                    class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
                             </div>
                             <div>
-                                <label class="font-semibold text-sm">Condición laboral <span class="text-red-500">(*)</span></label>
-                                <select v-model="form.condicionLaboral" class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
+                                <label class="font-semibold text-sm">Condición laboral <span
+                                        class="text-red-500">(*)</span></label>
+                                <select v-model="form.condicionLaboral"
+                                    class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
                                     <option value="">--Seleccione--</option>
                                 </select>
                             </div>
@@ -54,16 +61,20 @@
                         <!-- Fila 3 -->
                         <div class="grid grid-cols-[2fr_1fr_1fr] gap-4">
                             <div>
-                                <label class="font-semibold text-sm">Razon Social de Centro Laboral <span class="text-red-500">(*)</span></label>
-                                <input v-model="form.razonSocial" type="text" class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
+                                <label class="font-semibold text-sm">Razon Social de Centro Laboral <span
+                                        class="text-red-500">(*)</span></label>
+                                <input v-model="form.razonSocial" type="text"
+                                    class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
                             </div>
                             <div>
                                 <label class="font-semibold text-sm">Desde</label>
-                                <input v-model="form.desde" type="text" class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
+                                <input v-model="form.desde" type="text"
+                                    class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
                             </div>
                             <div>
                                 <label class="font-semibold text-sm">Hasta</label>
-                                <input v-model="form.hasta" type="text" class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
+                                <input v-model="form.hasta" type="text"
+                                    class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
                             </div>
                         </div>
 
@@ -71,17 +82,20 @@
                         <div class="grid grid-cols-3 gap-4">
                             <div>
                                 <label class="font-semibold text-sm">Cargo <span class="text-red-500">(*)</span></label>
-                                <input v-model="form.cargo" type="text" class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
+                                <input v-model="form.cargo" type="text"
+                                    class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
                             </div>
                             <div>
                                 <label class="font-semibold text-sm">Tipo de trabajador</label>
-                                <select v-model="form.tipoTrabajador" class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
+                                <select v-model="form.tipoTrabajador"
+                                    class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
                                     <option value="">--Seleccione--</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="font-semibold text-sm">Correo laboral</label>
-                                <input v-model="form.correoLaboral" type="text" class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
+                                <input v-model="form.correoLaboral" type="text"
+                                    class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
                             </div>
                         </div>
 
@@ -89,7 +103,8 @@
                         <div class="grid grid-cols-3 gap-4">
                             <div>
                                 <label class="font-semibold text-sm">Teléfono Laboral</label>
-                                <select v-model="form.telefonoLaboral" class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
+                                <select v-model="form.telefonoLaboral"
+                                    class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
                                     <option value="">--Seleccione--</option>
                                 </select>
                             </div>
@@ -99,13 +114,15 @@
                         <div class="grid grid-cols-3 gap-4">
                             <div>
                                 <label class="font-semibold text-sm">Tipo Establecimiento</label>
-                                <select v-model="form.tipoEstablecimiento" class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
+                                <select v-model="form.tipoEstablecimiento"
+                                    class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
                                     <option value="">--Seleccione--</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="font-semibold text-sm">Nombre Establecimiento</label>
-                                <input v-model="form.nombreEstablecimiento" type="text" class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
+                                <input v-model="form.nombreEstablecimiento" type="text"
+                                    class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
                             </div>
                         </div>
 
@@ -115,27 +132,34 @@
                         <div class="grid grid-cols-3 gap-4">
                             <div>
                                 <label class="font-semibold text-sm">Labor que realiza</label>
-                                <input v-model="form.laborRealiza" type="text" class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
+                                <input v-model="form.laborRealiza" type="text"
+                                    class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
                             </div>
                         </div>
 
                         <!-- Fila 8 -->
                         <div class="grid grid-cols-3 gap-4">
                             <div>
-                                <label class="font-semibold text-sm">Región / Departamento <span class="text-red-500">(*)</span></label>
-                                <select v-model="form.region" class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
+                                <label class="font-semibold text-sm">Región / Departamento <span
+                                        class="text-red-500">(*)</span></label>
+                                <select v-model="form.region"
+                                    class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
                                     <option value="">--Seleccione--</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="font-semibold text-sm">Provincia <span class="text-red-500">(*)</span></label>
-                                <select v-model="form.provincia" class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
+                                <label class="font-semibold text-sm">Provincia <span
+                                        class="text-red-500">(*)</span></label>
+                                <select v-model="form.provincia"
+                                    class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
                                     <option value="">--Seleccione--</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="font-semibold text-sm">Distrito <span class="text-red-500">(*)</span></label>
-                                <select v-model="form.distrito" class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
+                                <label class="font-semibold text-sm">Distrito <span
+                                        class="text-red-500">(*)</span></label>
+                                <select v-model="form.distrito"
+                                    class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
                                     <option value="">--Seleccione--</option>
                                 </select>
                             </div>
@@ -143,7 +167,9 @@
 
                         <!-- Footer -->
                         <div class="flex items-center justify-between mt-4">
-                            <span class="text-red-500 text-sm border border-red-500 px-2 py-1 rounded">Campo obligatorio (*)</span>
+                            <div>
+                                <p class="text-white bg-red-500 px-2">Campos Obligatorios (*)</p>
+                            </div>
                             <button type="button" class="px-4 py-1 bg-primary text-white rounded">Grabar</button>
                         </div>
                     </div>
