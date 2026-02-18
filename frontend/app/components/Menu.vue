@@ -1,5 +1,5 @@
 <template>
-    <div class="border-2 border-primary flex flex-col items-start h-fit">
+    <div class="border-2 border-primary flex flex-col items-start h-fit w-1/3">
         <NuxtLink v-for="item in menuItems" :key="item.label" :to="item.path"
             class="item py-1 px-4 hover:bg-secondary w-full h-full hover:text-white"
             active-class="bg-secondary text-white">

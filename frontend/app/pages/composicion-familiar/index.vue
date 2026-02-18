@@ -1,3 +1,9 @@
 <template>
-    <h1>Composición Familiar</h1>
+    <div class="w-full">
+        <Information title="Registrar Familiar">
+            <template #information>
+
+            </template>
+        </Information>
+    </div>
 </template>
