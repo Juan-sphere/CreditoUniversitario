@@ -13,11 +13,13 @@
                                     class="text-red-500">(*)</span></label>
                             <select class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
                                 <option value="">--Seleccione--</option>
+                                <option value="">DNI</option>
+                                <option value="">CE</option>
                             </select>
                         </div>
                         <div>
-                            <label class="font-semibold text-sm">Número de Documento <span
-                                    class="text-red-500">(*)</span></label>
+                            <label class="font-semibold text-sm">Número de Documento
+                                <span class="text-red-500">(*)</span></label>
                             <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
                         </div>
                         <div>
@@ -32,8 +34,8 @@
                             </select>
                         </div>
                         <div>
-                            <label class="font-semibold text-sm">Fecha de Nacimiento <span
-                                    class="text-red-500">(*)</span></label>
+                            <label class="font-semibold text-sm">Fecha de Nacimiento
+                                <span class="text-red-500">(*)</span></label>
                             <input type="date" class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
                         </div>
                         <div>
@@ -86,7 +88,7 @@
                         </div>
                     </div>
                     <!-- Fila 3 -->
-                    <div class="grid grid-cols-3 gap-4">
+                    <div class="grid grid-cols-3">
                         <div class="col-span-4 text-secondary font-bold text-shadow-2xs">
                             <h1>Datos Laborales</h1>
                         </div>
@@ -98,7 +100,7 @@
                                 <option value="">No</option>
                             </select>
                         </div>
-                        <div>
+                        <div class="mx-4">
                             <label class="font-semibold text-sm">Trabaja?</label>
                             <select class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
                                 <option value="">--Seleccione--</option>
@@ -107,53 +109,45 @@
                             </select>
                         </div>
                         <div>
-                            <label class="font-semibold text-sm">Es trabajador Independiente </label>
+                            <label class="font-semibold text-sm">Es trabajador Independiente
+                            </label>
                             <select class="w-full px-3 py-1 border border-gray-300 rounded mt-1">
                                 <option value="">--Seleccione--</option>
                                 <option value="">Si</option>
                                 <option value="">No</option>
                             </select>
                         </div>
-                        <div class="col-span-3 grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="font-semibold text-sm">Grado de Instrucción <span
-                                        class="text-red-500">(*)</span></label>
+                        <div class="col-span-3 grid grid-cols-2 gap-4 mt-4">
+                            <div class="w-full">
+                                <label class="font-semibold text-sm">Grado de Instrucción
+                                    <span class="text-red-500">(*)</span></label>
                                 <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
                             </div>
-                            <div>
-                                <label class="font-semibold text-sm">Profesión u Oficio <span
-                                        class="text-red-500">(*)</span></label>
+                            <div class="w-full">
+                                <label class="font-semibold text-sm">Profesión u Oficio
+                                    <span class="text-red-500">(*)</span></label>
                                 <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded mt-1" />
                             </div>
                         </div>
                     </div>
                     <!-- Fila 4-->
-                    <div class="gap-4 grid grid-cols-1 ">
-                        <div class="col-span-4 text-secondary font-bold text-shadow-2xs">
-                            <h1>Datos adicionales</h1>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <div class="flex items-center gap-3">
-                                <label class="font-semibold text-sm">El padre tiene problemas de salud?</label>
-                                <button type="button" role="switch" :aria-checked="enabled"
-                                    class="relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                                    :class="enabled ? 'bg-primary' : 'bg-gray-300'" @click="enabled = !enabled">
-                                    <span
-                                        class="pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
-                                        :class="enabled ? 'translate-x-5' : 'translate-x-0'" />
-                                </button>
+                    <div class="flex flex-row justify-start items-center">
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" v-model="saludMadre" class="sr-only peer" />
+                            <span class="select-none ms-3 text-sm font-medium text-heading mr-3">La madre tiene
+                                problemas de salud?</span>
+                            <div
+                                class="relative w-9 h-5 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary">
                             </div>
-                            <div class="flex items-center gap-3">
-                                <label class="font-semibold text-sm">El padre fallecio?</label>
-                                <button type="button" role="switch" :aria-checked="enabled"
-                                    class="relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                                    :class="enabled ? 'bg-primary' : 'bg-gray-300'" @click="enabled = !enabled">
-                                    <span
-                                        class="pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
-                                        :class="enabled ? 'translate-x-5' : 'translate-x-0'" />
-                                </button>
+                        </label>
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" v-model="fallecidoMadre" class="sr-only peer" />
+                            <span class="select-none ms-3 text-sm font-medium text-heading mr-3">La madre
+                                fallecio?</span>
+                            <div
+                                class="relative w-9 h-5 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary">
                             </div>
-                        </div>
+                        </label>
                     </div>
 
                     <div class="w-full flex justify-between items-center mt-5">
@@ -168,12 +162,10 @@
             </template>
         </Information>
     </div>
-
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
-const label = 'Activo';
-const enabled = ref(false);
+const saludMadre = ref(false);
+const fallecidoMadre = ref(false);
 </script>
-<style scoped></style>
