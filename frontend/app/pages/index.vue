@@ -1,27 +1,41 @@
 <template>
   <div
-    class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4"
+    class="min-h-screen flex items-center justify-center py-12 px-4 relative"
+    style="
+      background-image: url(&quot;/images/fondo1.jpg&quot;);
+      background-size: cover;
+      background-position: center;
+    "
   >
-    <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
-      <!-- Header -->
+    <!-- Overlay más suave -->
+    <div
+      class="absolute inset-0 bg-linear-to-br from-black/50 to-black/30 -z-10"
+    ></div>
+
+    <!-- Contenido -->
+    <div
+      class="relative max-w-md w-full bg-white/95 backdrop-blur-sm rounded-lg shadow-2xl p-8"
+    >
       <div class="text-center mb-8">
         <h2 class="text-3xl font-bold text-gray-900">Iniciar Sesión</h2>
-        <p class="mt-2 text-sm text-gray-600">Accede a tu cuenta</p>
+        <p class="mt-2 text-sm text-gray-600">Accede con tu DNI o Código</p>
       </div>
 
-      <!-- Formulario -->
-      <form @submit.prevent="loginConEmail" class="space-y-5">
+      <form @submit.prevent="loginConDNI" class="space-y-5">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1"
-            >Email</label
-          >
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            DNI o Código de Universidad
+          </label>
           <input
-            v-model="form.email"
-            type="email"
+            v-model="form.identificador"
+            type="text"
             required
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-            placeholder="tu@ejemplo.com"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-white"
+            placeholder="DNI99999999 o código"
           />
+          <p class="mt-1 text-xs text-gray-500">
+            Ejemplos: DNI12345678, CE87654321
+          </p>
         </div>
 
         <div>
@@ -32,12 +46,11 @@
             v-model="form.password"
             type="password"
             required
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-white"
             placeholder="••••••••"
           />
         </div>
 
-        <!-- Error -->
         <div
           v-if="error"
           class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"
@@ -45,26 +58,24 @@
           {{ error }}
         </div>
 
-        <!-- Botón submit -->
         <button
           type="submit"
           :disabled="loading"
-          class="w-full py-3 px-4 bg-primary text-white rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50"
+          class="w-full py-3 px-4 bg-primary text-white rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50 shadow-lg"
         >
           <span v-if="!loading">INICIAR SESIÓN</span>
           <span v-else>Cargando...</span>
         </button>
       </form>
 
-      <!-- Link registro -->
       <p class="mt-6 text-center text-sm text-gray-600">
-        ¿No tienes cuenta?
-        <router-link
-          to="registro"
+        ¿Primera vez aquí?
+        <NuxtLink
+          to="/registro"
           class="text-primary font-medium hover:underline"
         >
-          Regístrate aquí
-        </router-link>
+          Regístrate
+        </NuxtLink>
       </p>
     </div>
   </div>
@@ -79,11 +90,11 @@ definePageMeta({
 });
 
 const router = useRouter();
-const form = ref({ email: "", password: "" });
+const form = ref({ identificador: "", password: "" });
 const error = ref("");
 const loading = ref(false);
 
-async function loginConEmail() {
+async function loginConDNI() {
   error.value = "";
   loading.value = true;
 
@@ -92,7 +103,7 @@ async function loginConEmail() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        email: form.value.email,
+        identificador: form.value.identificador,
         contraseña: form.value.password,
       }),
     });
