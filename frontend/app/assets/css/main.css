@@ -6,3 +6,7 @@
   --color-terciary: #91C853;
   --color-dark: #070131;
 }
+
+input[type="text"]{
+  color: black !important;
+}

@@ -23,17 +23,18 @@
         <div class="w-full flex justify-end mt-4">
             <button type="submit" class="px-4 py-1 bg-terciary text-white rounded">Editar</button>
         </div>
-        <Register/>
+        <Register :tabs="['Estado Civil', 'Teléfono', 'Dirección']" />
 
         <div>
-            <select name="grabar" id="grabar" class="px-3 py-1 border border-gray-300 rounded mt-5 mr-5 text-left w-1/2">
+            <select name="grabar" id="grabar"
+                class="px-3 py-1 border border-gray-300 rounded mt-5 mr-5 text-left w-1/2">
                 <option value="grabar">--Seleccione--</option>
                 <option value="grabar">Grabar</option>
             </select>
             <button class="px-4 py-1 bg-terciary text-white rounded">Grabar</button>
         </div>
-        
-        <BackNext/>
+
+        <BackNext />
     </div>
 </template>
 
@@ -41,6 +42,4 @@
 
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
