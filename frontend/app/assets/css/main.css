@@ -1,12 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #1570A7;
-  --color-secondary: #02B0E2;
-  --color-terciary: #91C853;
+  --color-primary: #1570a7;
+  --color-secondary: #02b0e2;
+  --color-terciary: #91c853;
   --color-dark: #070131;
+  --color-light: #f8fbf9;
 }
 
-input[type="text"]{
+input[type="text"] {
   color: black !important;
 }
