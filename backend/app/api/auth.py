@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Header
 from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.db.models import Usuario, EstudianteHabilitado
@@ -8,6 +8,7 @@ from passlib.context import CryptContext
 from jose import JWTError, jwt
 import os
 from dotenv import load_dotenv
+from typing import Optional
 
 load_dotenv()
 
@@ -81,6 +82,17 @@ def get_current_user(token: str, db: Session = Depends(get_db)):
     if usuario is None:
         raise HTTPException(status_code=401, detail="Usuario no encontrado")
     return usuario
+
+def get_token_from_header(authorization: Optional[str] = Header(None)) -> str:
+    """Extrae el token del header Authorization: Bearer <token>"""
+    if not authorization:
+        raise HTTPException(status_code=401, detail="Token requerido en el header Authorization")
+    
+    parts = authorization.split()
+    if len(parts) != 2 or parts[0].lower() != "bearer":
+        raise HTTPException(status_code=401, detail="Formato inválido. Use: Authorization: Bearer <token>")
+    
+    return parts[1]
 
 # ==================== REGISTRO ====================
 @router.post("/registro")
@@ -217,11 +229,9 @@ def login(datos: UsuarioLogin, db: Session = Depends(get_db)):
 
 # ==================== OBTENER USUARIO ACTUAL ====================
 @router.get("/me")
-def obtener_usuario_actual(token: str = None, db: Session = Depends(get_db)):
+def obtener_usuario_actual(authorization: Optional[str] = Header(None), db: Session = Depends(get_db)):
     """Obtener información del usuario autenticado"""
-    if not token:
-        raise HTTPException(status_code=401, detail="Token requerido")
-    
+    token = get_token_from_header(authorization)
     usuario = get_current_user(token, db)
     
     return {
@@ -239,11 +249,9 @@ def obtener_usuario_actual(token: str = None, db: Session = Depends(get_db)):
 
 # ==================== REFRESCAR TOKEN ====================
 @router.post("/refresh")
-def refrescar_token(token: str = None, db: Session = Depends(get_db)):
+def refrescar_token(authorization: Optional[str] = Header(None), db: Session = Depends(get_db)):
     """Refrescar JWT token"""
-    if not token:
-        raise HTTPException(status_code=401, detail="Token requerido")
-    
+    token = get_token_from_header(authorization)
     usuario = get_current_user(token, db)
     
     # Crear nuevo token
@@ -271,7 +279,11 @@ def verificar_email(token: str, db: Session = Depends(get_db)):
 
 # ==================== LISTAR USUARIOS ====================
 @router.get("/usuarios")
-def listar_usuarios(db: Session = Depends(get_db)):
+def listar_usuarios(authorization: Optional[str] = Header(None), db: Session = Depends(get_db)):
+    """Listar todos los usuarios (requiere autenticación)"""
+    token = get_token_from_header(authorization)
+    get_current_user(token, db)  # Verificar que el token es válido
+    
     usuarios = db.query(Usuario).all()
     return [
         {
@@ -286,7 +298,11 @@ def listar_usuarios(db: Session = Depends(get_db)):
 
 # ==================== ADMIN: AGREGAR ESTUDIANTE ====================
 @router.post("/admin/estudiante")
-def crear_estudiante(datos: EstudianteHabilitadoCreate, db: Session = Depends(get_db)):
+def crear_estudiante(datos: EstudianteHabilitadoCreate, authorization: Optional[str] = Header(None), db: Session = Depends(get_db)):
+    """Crear estudiante habilitado (requiere autenticación)"""
+    token = get_token_from_header(authorization)
+    get_current_user(token, db)  # Verificar que el token es válido
+    
     estudiante = EstudianteHabilitado(**datos.dict())
     db.add(estudiante)
     db.commit()
@@ -295,26 +311,33 @@ def crear_estudiante(datos: EstudianteHabilitadoCreate, db: Session = Depends(ge
 
 # ==================== ADMIN: CARGAR EXCEL ====================
 @router.post("/admin/cargar-excel")
-async def cargar_excel_estudiantes(file: bytes = None):
+async def cargar_excel_estudiantes(authorization: Optional[str] = Header(None), file: bytes = None):
     """
-    TODO: Endpoint para cargar Excel con estudiantes habilitados
+    Cargar Excel con estudiantes habilitados (requiere autenticación)
     Columnas esperadas: Universidad, DNI, Apellido Paterno, Apellido Materno, 
                         Nombre, Segundo Nombre, Email Universidad
     """
+    token = get_token_from_header(authorization)
+    # TODO: Validar usuario con get_current_user cuando tengamos DB
     # Implementar con pandas cuando sea necesario
     return {"success": True, "mensaje": "Endpoint pendiente de implementar"}
 
 # ==================== OBTENER UNIVERSIDADES ====================
 @router.get("/universidades")
-def listar_universidades(db: Session = Depends(get_db)):
-    """Obtener lista de universidades disponibles"""
+def listar_universidades(authorization: Optional[str] = Header(None), db: Session = Depends(get_db)):
+    """Obtener lista de universidades disponibles (requiere autenticación)"""
+    token = get_token_from_header(authorization)
+    get_current_user(token, db)  # Verificar que el token es válido
+    
     universidades = db.query(EstudianteHabilitado.universidad).distinct().all()
     return [u[0] for u in universidades]
 
-    # ==================== BUSCAR ESTUDIANTE POR DNI ====================
+# ==================== BUSCAR ESTUDIANTE POR DNI ====================
 @router.get("/buscar-estudiante/{dni}")
-def buscar_estudiante(dni: str, db: Session = Depends(get_db)):
-    """Buscar estudiante habilitado por DNI para autocompletar registro"""
+def buscar_estudiante(dni: str, authorization: Optional[str] = Header(None), db: Session = Depends(get_db)):
+    """Buscar estudiante habilitado por DNI para autocompletar registro (requiere autenticación)"""
+    token = get_token_from_header(authorization)
+    get_current_user(token, db)  # Verificar que el token es válido
     
     # Limpiar DNI
     dni_limpio = dni.strip().upper()
