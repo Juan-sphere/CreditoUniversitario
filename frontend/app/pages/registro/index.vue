@@ -4,25 +4,28 @@
     style="background-image: url(&quot;/images/fondo2.jpg&quot;)"
   >
     <!-- Overlay -->
-    <div class="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
+    <div class="absolute inset-0 bg-black/30"></div>
+
+    <!-- Logo: fuera del card, esquina superior izquierda -->
+    <div class="absolute top-6 left-6 z-10">
+      <img
+        src="/images/logo.png"
+        alt="ACCESSA"
+        class="h-20 object-contain drop-shadow-xl"
+      />
+    </div>
 
     <!-- Contenido -->
     <div
-      class="relative max-w-md w-full bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl p-8"
+      class="relative max-w-md w-full bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl px-8 py-8"
     >
-      <!-- Logo -->
-      <div class="flex justify-center mb-6">
-        <img src="/images/logo.jpg" alt="ACCESSA" class="h-20 object-contain" />
-      </div>
-
       <!-- Título -->
-      <div class="text-center mb-6">
-        <h2 class="text-3xl font-bold text-gray-900">Registro</h2>
-        <p class="mt-2 text-sm text-gray-600">Crea tu cuenta</p>
+      <div class="text-center mb-5">
+        <h2 class="text-2xl font-bold text-gray-900">Registro</h2>
       </div>
 
       <!-- Info -->
-      <div class="mb-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+      <div class="mb-5 p-3 bg-blue-50 border border-blue-200 rounded-lg">
         <p class="text-xs text-blue-800">
           Solo estudiantes autorizados pueden registrarse
         </p>
