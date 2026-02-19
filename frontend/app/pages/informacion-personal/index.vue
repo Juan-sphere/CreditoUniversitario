@@ -84,7 +84,8 @@
             <label class="text-gray-700 font-semibold">Telefono celular <span class="text-red-500">(*)</span></label>
             <input type="number" class="w-full px-3 py-1 border border-gray-300 rounded" min="0" required />
           </div>
-          <div class="w-full flex justify-between items-center mt-5 pl-2">
+
+          <div class="w-full flex flex-row justify-between items-center mt-5">
             <div>
               <p class="text-white bg-red-500 px-2">Campos Obligatorios (*)</p>
             </div>

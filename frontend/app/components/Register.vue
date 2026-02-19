@@ -14,7 +14,7 @@
         <h2>{{ tab }}</h2>
       </div>
     </div>
-    <div>
+    <div class="border border-[#ccc]">
       <slot name="register">
       </slot>
 

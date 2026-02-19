@@ -40,9 +40,24 @@
                             rows="6"></textarea>
                     </div>
 
+                    <!-- Declaración jurada -->
+                    <div class="border-t pt-4">
+                        <label class="flex items-start cursor-pointer hover:bg-gray-50 p-3 rounded -mx-3">
+                            <input type="checkbox" v-model="declaration"
+                                class="mt-1 w-4 h-4 text-cyan-400 rounded focus:ring-cyan-400" />
+                            <span class="ml-3">
+                                <p class="text-gray-800 font-semibold">
+                                    Declaro que la información presentada en este formulario es verdadera, fidedigna y
+                                    actual, y lo hago con carácter de declaración jurada.
+                                </p>
+                            </span>
+                        </label>
+                    </div>
+
                     <!-- Botón Enviar solicitud -->
                     <div class="flex justify-end pt-4">
-                        <button class="px-6 py-2 bg-terciary text-white rounded font-semibold hover:bg-terciary-dark">
+                        <button @click="handleSubmit" :disabled="!declaration"
+                            class="px-6 py-2 bg-terciary text-white rounded font-semibold hover:bg-terciary-dark disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors">
                             Enviar Solicitud
                         </button>
                     </div>
@@ -53,7 +68,19 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 
+const declaration = ref(false)
+
+const handleSubmit = () => {
+    if (!declaration.value) {
+        alert('Debes aceptar la declaración jurada para continuar')
+        return
+    }
+
+    alert('Solicitud enviada correctamente')
+    console.log('Formulario enviado')
+}
 </script>
 
 <style scoped></style>

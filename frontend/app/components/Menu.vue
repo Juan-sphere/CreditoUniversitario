@@ -12,22 +12,13 @@
 const menuItems = [
     { label: 'Instrucciones', path: '/instrucciones' },
     { label: 'Información Personal', path: '/informacion-personal' },
-    { label: 'Información de los Padres', path: '/informacion-padre' },
+    { label: 'Información de los Padres', path: '/informacion-padres' },
     { label: 'Composición del núcleo familiar con el que vive', path: '/composicion-familiar' },
     { label: 'Personas que contribuyen externamente con la economia', path: '/personas-externas' },
     { label: 'Información económica del núcleo familiar', path: '/informacion-economica' },
     { label: 'Patrimonio del nucleo familiar', path: '/patrimonio-familiar' },
     { label: 'Documentos de sustentación', path: '/documentos-sustentacion' },
-    { label: 'Enviar Solicitud', path: '/enviar-solicitud' },
-
-    { label: 'Dirección del Alumno', path: '/direccion-alumno' },
-    { label: 'Datos laborales del Alumno', path: '/datos-laborales-alumno' },
-    { label: 'Colegio de procedencia', path: '/colegio-procedencia' },
-    { label: 'Información de la Madre', path: '/informacion-madre' },
-    { label: 'Información Socioeconómica', path: '/informacion-socioeconomica' },
-    { label: 'Datos de Vivienda', path: '/datos-vivienda' },
-    { label: 'Datos de Vehículo', path: '/datos-vehiculo' },
-    { label: 'Archivos Adjuntos', path: '/archivos-adjuntos' },
+    { label: 'Enviar Solicitud', path: '/enviar-solicitud' }
 ]
 </script>
 
