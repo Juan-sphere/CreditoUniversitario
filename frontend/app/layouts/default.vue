@@ -13,8 +13,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import Register from "~/components/Register.vue";
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>
