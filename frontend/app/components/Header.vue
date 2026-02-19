@@ -2,7 +2,7 @@
   <div
     class="bg-white text-primary border-b border-gray-200 shadow-sm fixed top-0 left-0 right-0 z-50"
   >
-    <div class="max-w-325 mx-auto h-16 flex items-center">
+    <div class="max-w-350 mx-auto h-16 flex items-center">
       <!-- Logo izquierda -->
       <div class="flex-none">
         <img
