@@ -12,40 +12,45 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 def hash_password(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
 
+def generar_token() -> str:
+    return secrets.token_urlsafe(32)
+
 # ==================== REGISTRO ====================
 @router.post("/registro")
 def registro(datos: UsuarioRegistro, db: Session = Depends(get_db)):
+    """
+    Registro de estudiante habilitado
+    Valida: Universidad + DNI + Email deben estar en la BD de habilitados
+    """
+    
+    # Validaciones básicas
     if datos.contraseña != datos.confirmar_contraseña:
         raise HTTPException(status_code=400, detail="Las contraseñas no coinciden")
     
     if len(datos.contraseña) < 6:
         raise HTTPException(status_code=400, detail="La contraseña debe tener al menos 6 caracteres")
     
-    identificador = datos.identificador.strip().upper()
+    # Limpiar DNI (remover "DNI" si viene)
+    dni = datos.dni.strip().upper()
+    if dni.startswith("DNI"):
+        dni = dni[3:]
+    if dni.startswith("CE"):
+        dni = dni[2:]
     
-    # Buscar en estudiantes habilitados
-    estudiante = None
-    
-    if identificador.startswith("DNI") or identificador.startswith("CE"):
-        tipo_doc = identificador[:3] if identificador.startswith("DNI") else identificador[:2]
-        numero_doc = identificador[3:] if tipo_doc == "DNI" else identificador[2:]
-        
-        estudiante = db.query(EstudianteHabilitado).filter(
-            EstudianteHabilitado.tipo_documento == tipo_doc,
-            EstudianteHabilitado.numero_documento == numero_doc
-        ).first()
-    else:
-        estudiante = db.query(EstudianteHabilitado).filter(
-            EstudianteHabilitado.codigo_universidad == identificador
-        ).first()
+    # Buscar estudiante habilitado
+    estudiante = db.query(EstudianteHabilitado).filter(
+        EstudianteHabilitado.universidad == datos.universidad,
+        EstudianteHabilitado.numero_documento == dni,
+        EstudianteHabilitado.correo_universidad == datos.correo_universidad
+    ).first()
     
     if not estudiante:
         raise HTTPException(
             status_code=403,
-            detail="No estás habilitado para registrarte. Contacta con la universidad."
+            detail="No estás habilitado para registrarte. Verifica que tu Universidad, DNI y Email sean correctos."
         )
     
-    # Verificar fechas
+    # Verificar fechas de habilitación
     hoy = date.today()
     if not (estudiante.fecha_inicio_habilitacion <= hoy <= estudiante.fecha_fin_habilitacion):
         raise HTTPException(
@@ -62,9 +67,9 @@ def registro(datos: UsuarioRegistro, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Ya estás registrado.")
     
     # Crear usuario
-    token = secrets.token_urlsafe(32)
+    token = generar_token()
     nuevo_usuario = Usuario(
-        codigo_universidad=estudiante.codigo_universidad,
+        universidad=estudiante.universidad,
         numero_documento=estudiante.numero_documento,
         tipo_documento=estudiante.tipo_documento,
         nombres=estudiante.nombres,
@@ -72,7 +77,7 @@ def registro(datos: UsuarioRegistro, db: Session = Depends(get_db)):
         apellido_materno=estudiante.apellido_materno,
         correo_universidad=estudiante.correo_universidad,
         contraseña_hash=hash_password(datos.contraseña),
-        email_verificado=True,
+        email_verificado=True,  # Cambiar a False cuando implementes emails
         token_verificacion=token
     )
     
@@ -82,9 +87,10 @@ def registro(datos: UsuarioRegistro, db: Session = Depends(get_db)):
     
     return {
         "success": True,
-        "mensaje": f"Registro exitoso. Revisa tu correo {nuevo_usuario.correo_universidad} para verificar tu cuenta.",
+        "mensaje": f"Registro exitoso. Bienvenido {nuevo_usuario.nombres}",
         "usuario": {
             "id": nuevo_usuario.id,
+            "universidad": nuevo_usuario.universidad,
             "nombres": nuevo_usuario.nombres,
             "apellidos": f"{nuevo_usuario.apellido_paterno} {nuevo_usuario.apellido_materno}"
         }
@@ -93,28 +99,26 @@ def registro(datos: UsuarioRegistro, db: Session = Depends(get_db)):
 # ==================== LOGIN ====================
 @router.post("/login")
 def login(datos: UsuarioLogin, db: Session = Depends(get_db)):
-    identificador = datos.identificador.strip().upper()
+    """Login con DNI"""
     
-    usuario = None
+    # Limpiar DNI
+    dni = datos.dni.strip().upper()
+    if dni.startswith("DNI"):
+        dni = dni[3:]
+    if dni.startswith("CE"):
+        dni = dni[2:]
     
-    if identificador.startswith("DNI") or identificador.startswith("CE"):
-        tipo_doc = identificador[:3] if identificador.startswith("DNI") else identificador[:2]
-        numero_doc = identificador[3:] if tipo_doc == "DNI" else identificador[2:]
-        
-        usuario = db.query(Usuario).filter(
-            Usuario.tipo_documento == tipo_doc,
-            Usuario.numero_documento == numero_doc
-        ).first()
-    else:
-        usuario = db.query(Usuario).filter(
-            Usuario.codigo_universidad == identificador
-        ).first()
+    # Buscar usuario
+    usuario = db.query(Usuario).filter(
+        Usuario.numero_documento == dni
+    ).first()
     
     if not usuario:
-        raise HTTPException(status_code=401, detail="Usuario o contraseña incorrectos")
+        raise HTTPException(status_code=401, detail="DNI o contraseña incorrectos")
     
+    # Verificar contraseña
     if usuario.contraseña_hash != hash_password(datos.contraseña):
-        raise HTTPException(status_code=401, detail="Usuario o contraseña incorrectos")
+        raise HTTPException(status_code=401, detail="DNI o contraseña incorrectos")
     
     if not usuario.email_verificado:
         raise HTTPException(
@@ -127,13 +131,14 @@ def login(datos: UsuarioLogin, db: Session = Depends(get_db)):
         "mensaje": f"¡Bienvenido {usuario.nombres}!",
         "usuario": {
             "id": usuario.id,
+            "universidad": usuario.universidad,
             "nombres": usuario.nombres,
             "apellidos": f"{usuario.apellido_paterno} {usuario.apellido_materno}",
-            "codigo": usuario.codigo_universidad
+            "correo": usuario.correo_universidad
         }
     }
 
-# ==================== VERIFICAR ====================
+# ==================== VERIFICAR EMAIL ====================
 @router.get("/verificar/{token}")
 def verificar_email(token: str, db: Session = Depends(get_db)):
     usuario = db.query(Usuario).filter(Usuario.token_verificacion == token).first()
@@ -145,10 +150,22 @@ def verificar_email(token: str, db: Session = Depends(get_db)):
     usuario.token_verificacion = None
     db.commit()
     
-    return {
-        "success": True,
-        "mensaje": "Cuenta verificada. Ya puedes iniciar sesión."
-    }
+    return {"success": True, "mensaje": "Cuenta verificada. Ya puedes iniciar sesión."}
+
+# ==================== LISTAR USUARIOS ====================
+@router.get("/usuarios")
+def listar_usuarios(db: Session = Depends(get_db)):
+    usuarios = db.query(Usuario).all()
+    return [
+        {
+            "id": u.id,
+            "universidad": u.universidad,
+            "documento": f"{u.tipo_documento}{u.numero_documento}",
+            "nombres": f"{u.nombres} {u.apellido_paterno} {u.apellido_materno}",
+            "email_verificado": u.email_verificado
+        }
+        for u in usuarios
+    ]
 
 # ==================== ADMIN: AGREGAR ESTUDIANTE ====================
 @router.post("/admin/estudiante")
@@ -157,32 +174,58 @@ def crear_estudiante(datos: EstudianteHabilitadoCreate, db: Session = Depends(ge
     db.add(estudiante)
     db.commit()
     db.refresh(estudiante)
-    return {"success": True, "estudiante": estudiante.id}
+    return {"success": True, "estudiante_id": estudiante.id}
 
-# ==================== LISTAR ====================
-@router.get("/usuarios")
-def listar_usuarios(db: Session = Depends(get_db)):
-    usuarios = db.query(Usuario).all()
-    return [
-        {
-            "id": u.id,
-            "codigo": u.codigo_universidad,
-            "documento": f"{u.tipo_documento}{u.numero_documento}",
-            "nombres": u.nombres,
-            "email_verificado": u.email_verificado
-        }
-        for u in usuarios
-    ]
+# ==================== ADMIN: CARGAR EXCEL ====================
+@router.post("/admin/cargar-excel")
+async def cargar_excel_estudiantes(file: bytes = None):
+    """
+    TODO: Endpoint para cargar Excel con estudiantes habilitados
+    Columnas esperadas: Universidad, DNI, Apellido Paterno, Apellido Materno, 
+                        Nombre, Segundo Nombre, Email Universidad
+    """
+    # Implementar con pandas cuando sea necesario
+    return {"success": True, "mensaje": "Endpoint pendiente de implementar"}
 
-@router.get("/admin/tokens")
-def ver_tokens(db: Session = Depends(get_db)):
-    usuarios = db.query(Usuario).all()
-    return [
-        {
-            "id": u.id,
-            "nombre": u.nombres,
-            "token": u.token_verificacion,
-            "verificado": u.email_verificado
-        }
-        for u in usuarios
-    ]
+# ==================== OBTENER UNIVERSIDADES ====================
+@router.get("/universidades")
+def listar_universidades(db: Session = Depends(get_db)):
+    """Obtener lista de universidades disponibles"""
+    universidades = db.query(EstudianteHabilitado.universidad).distinct().all()
+    return [u[0] for u in universidades]
+
+    # ==================== BUSCAR ESTUDIANTE POR DNI ====================
+@router.get("/buscar-estudiante/{dni}")
+def buscar_estudiante(dni: str, db: Session = Depends(get_db)):
+    """Buscar estudiante habilitado por DNI para autocompletar registro"""
+    
+    # Limpiar DNI
+    dni_limpio = dni.strip().upper()
+    if dni_limpio.startswith("DNI"):
+        dni_limpio = dni_limpio[3:]
+    if dni_limpio.startswith("CE"):
+        dni_limpio = dni_limpio[2:]
+    
+    # Buscar estudiante
+    estudiante = db.query(EstudianteHabilitado).filter(
+        EstudianteHabilitado.numero_documento == dni_limpio
+    ).first()
+    
+    if not estudiante:
+        raise HTTPException(status_code=404, detail="DNI no encontrado")
+    
+    # Verificar fechas
+    hoy = date.today()
+    if not (estudiante.fecha_inicio_habilitacion <= hoy <= estudiante.fecha_fin_habilitacion):
+        raise HTTPException(
+            status_code=403,
+            detail="Tu habilitación ha expirado"
+        )
+    
+    return {
+        "universidad": estudiante.universidad,
+        "correo_universidad": estudiante.correo_universidad,
+        "nombres": estudiante.nombres,
+        "apellido_paterno": estudiante.apellido_paterno,
+        "apellido_materno": estudiante.apellido_materno
+    }
