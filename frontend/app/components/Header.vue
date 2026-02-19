@@ -1,5 +1,7 @@
 <template>
-  <div class="bg-dark text-white shadow-lg fixed top-0 left-0 right-0 z-50">
+  <div
+    class="bg-white text-primary border-b border-gray-200 shadow-sm fixed top-0 left-0 right-0 z-50"
+  >
     <div class="max-w-325 mx-auto h-16 flex items-center">
       <!-- Logo izquierda -->
       <div class="flex-none">
@@ -12,16 +14,24 @@
 
       <!-- Menú centro -->
       <div class="flex-1 flex justify-center gap-8">
-        <div class="cursor-pointer text-sm hover:opacity-80 transition">
+        <div
+          class="cursor-pointer text-sm font-semibold hover:opacity-80 transition"
+        >
           BANDEJA
         </div>
-        <div class="cursor-pointer text-sm hover:opacity-80 transition">
+        <div
+          class="cursor-pointer text-sm font-semibold hover:opacity-80 transition"
+        >
           CAMBIAR CONTRASEÑA
         </div>
-        <div class="cursor-pointer text-sm hover:opacity-80 transition">
+        <div
+          class="cursor-pointer text-sm font-semibold hover:opacity-80 transition"
+        >
           FORMATOS
         </div>
-        <div class="cursor-pointer text-sm hover:opacity-80 transition">
+        <div
+          class="cursor-pointer text-sm font-semibold hover:opacity-80 transition"
+        >
           ESTADO SOLICITUD
         </div>
       </div>
@@ -30,11 +40,11 @@
       <div class="relative" ref="dropdown">
         <button
           @click="toggleDropdown"
-          class="flex items-center gap-3 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition"
+          class="flex items-center gap-3 px-4 py-2 bg-primary/10 hover:bg-primary/20 rounded-lg transition"
         >
           <!-- Icono de persona -->
           <div
-            class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center"
+            class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

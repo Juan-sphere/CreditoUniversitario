@@ -7,11 +7,11 @@
     <div class="absolute inset-0 bg-black/30"></div>
 
     <!-- Logo: fuera del card, esquina superior izquierda -->
-    <div class="absolute top-6 left-6 z-10">
+    <div class="absolute top-6 left-1/2 -translate-x-1/2 z-10">
       <img
         src="/images/logo.png"
         alt="ACCESSA"
-        class="h-20 object-contain drop-shadow-xl"
+        class="h-25 object-contain drop-shadow-xl"
       />
     </div>
 

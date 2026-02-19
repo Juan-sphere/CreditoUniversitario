@@ -1,17 +1,17 @@
 <template>
   <div
-    class="min-h-screen flex items-center justify-center py-12 px-4 bg-cover bg-center relative"
+    class="min-h-screen flex flex-col items-center justify-center py-12 px-4 bg-cover bg-center relative"
     style="background-image: url(&quot;/images/fondo2.jpg&quot;)"
   >
     <!-- Overlay -->
     <div class="absolute inset-0 bg-black/30"></div>
 
-    <!-- Logo: fuera del card, esquina superior izquierda -->
-    <div class="absolute top-6 left-6 z-10">
+    <!-- Logo: encima del card, en flujo normal -->
+    <div class="relative z-10 mb-4">
       <img
         src="/images/logo.png"
         alt="ACCESSA"
-        class="h-20 object-contain drop-shadow-xl"
+        class="h-24 object-contain drop-shadow-xl"
       />
     </div>
 
@@ -43,9 +43,11 @@
               v-model="form.universidad"
               required
               :disabled="loadingUniversidades || datosAutocompletados"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white appearance-none pr-10"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white appearance-none pr-10 text-sm"
             >
-              <option value="">Selecciona tu universidad</option>
+              <option value="" class="text-sm">
+                Selecciona tu universidad
+              </option>
               <option v-for="uni in universidades" :key="uni" :value="uni">
                 {{ uni }}
               </option>
@@ -77,63 +79,65 @@
         </div>
 
         <!-- DNI con autocompletado -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1"
-            >DNI</label
-          >
-          <div class="relative">
-            <input
-              v-model="form.dni"
-              @input="buscarEstudiante"
-              type="text"
-              required
-              maxlength="8"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white pr-10"
-              placeholder="12345678"
-            />
-            <!-- Spinner de búsqueda -->
-            <div
-              v-if="buscandoDNI"
-              class="absolute right-3 top-1/2 transform -translate-y-1/2"
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1"
+              >DNI</label
             >
+            <div class="relative">
+              <input
+                v-model="form.dni"
+                @input="buscarEstudiante"
+                type="text"
+                required
+                maxlength="8"
+                class="w-full pl-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white pr-10 text-sm"
+                placeholder="72695726"
+              />
+              <!-- Spinner de búsqueda -->
               <div
-                class="w-5 h-5 border-2 border-green-500 border-t-transparent rounded-full animate-spin"
-              ></div>
+                v-if="buscandoDNI"
+                class="absolute right-3 top-1/2 transform -translate-y-1/2"
+              >
+                <div
+                  class="w-5 h-5 border-2 border-green-500 border-t-transparent rounded-full animate-spin"
+                ></div>
+              </div>
+              <!-- Check verde si encontró -->
+              <svg
+                v-else-if="datosAutocompletados"
+                class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-green-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                ></path>
+              </svg>
             </div>
-            <!-- Check verde si encontró -->
-            <svg
-              v-else-if="datosAutocompletados"
-              class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-green-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 13l4 4L19 7"
-              ></path>
-            </svg>
+            <p v-if="datosAutocompletados" class="mt-1 text-xs text-green-600">
+              ✓ Datos encontrados
+            </p>
           </div>
-          <p v-if="datosAutocompletados" class="mt-1 text-xs text-green-600">
-            ✓ Datos encontrados y autocompletados
-          </p>
-        </div>
 
-        <!-- Email Universidad (autocompletado) -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1"
-            >Email Universidad</label
-          >
-          <input
-            v-model="form.correo"
-            type="email"
-            required
-            :disabled="datosAutocompletados"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white disabled:bg-gray-50"
-            placeholder="tu@universidad.edu.pe"
-          />
+          <!-- Email Universidad (autocompletado) -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1"
+              >Email Universidad</label
+            >
+            <input
+              v-model="form.correo"
+              type="email"
+              required
+              :disabled="datosAutocompletados"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white disabled:bg-gray-50 text-sm"
+              placeholder="tu@universidad.edu.pe"
+            />
+          </div>
         </div>
 
         <!-- Nombre (solo lectura, autocompletado) -->
@@ -158,13 +162,13 @@
             v-model="form.password"
             type="password"
             required
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 text-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
             placeholder="Mínimo 6 caracteres"
           />
         </div>
 
         <!-- Confirmar -->
-        <div>
+        <!-- <div>
           <label class="block text-sm font-medium text-gray-700 mb-1"
             >Confirmar Contraseña</label
           >
@@ -175,7 +179,7 @@
             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
             placeholder="Repite tu contraseña"
           />
-        </div>
+        </div> -->
 
         <!-- Error -->
         <div
