@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-325 mx-auto">
+  <div class="max-w-350 mx-auto">
     <div class="pt-20">
       <Header />
       <div class="flex gap-5 w-full">
