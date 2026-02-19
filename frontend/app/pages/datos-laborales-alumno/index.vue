@@ -108,10 +108,6 @@
                                     <option value="">--Seleccione--</option>
                                 </select>
                             </div>
-                        </div>
-
-                        <!-- Fila 6 -->
-                        <div class="grid grid-cols-3 gap-4">
                             <div>
                                 <label class="font-semibold text-sm">Tipo Establecimiento</label>
                                 <select v-model="form.tipoEstablecimiento"
@@ -165,7 +161,6 @@
                             </div>
                         </div>
 
-                        <!-- Footer -->
                         <div class="flex items-center justify-between mt-4">
                             <div>
                                 <p class="text-white bg-red-500 px-2">Campos Obligatorios (*)</p>

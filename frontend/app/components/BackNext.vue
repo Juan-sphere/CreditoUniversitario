@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-center gap-2 mt-15">
+    <div class="flex justify-center gap-2 mt-15 mb-5">
         <button class="border border-gray-300 px-4 py-1 rounded-full text-secondary">Anterior</button>
         <button class="border border-gray-300 px-4 py-1 rounded-full text-secondary">Siguiente</button>
     </div>
@@ -9,6 +9,4 @@
 
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
