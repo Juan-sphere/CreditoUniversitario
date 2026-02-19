@@ -2,18 +2,85 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.db.models import Usuario, EstudianteHabilitado
-from app.schemas.usuario import UsuarioRegistro, UsuarioLogin, EstudianteHabilitadoCreate
-from datetime import date
-import hashlib
-import secrets
+from app.schemas.usuario import UsuarioRegistro, UsuarioLogin, EstudianteHabilitadoCreate, TokenResponse
+from datetime import date, datetime, timedelta
+from passlib.context import CryptContext
+from jose import JWTError, jwt
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Configuración JWT
+SECRET_KEY = os.getenv("SECRET_KEY", "tu-clave-secreta-aqui-cambiarla-en-produccion")
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+# Contexto para hash de contraseñas
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
+# ==================== FUNCIONES DE SEGURIDAD ====================
 def hash_password(password: str) -> str:
-    return hashlib.sha256(password.encode()).hexdigest()
+    """Hash seguro de contraseña con bcrypt"""
+    return pwd_context.hash(password)
 
-def generar_token() -> str:
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verifica contraseña con soporte para SHA256 heredado y bcrypt nuevo"""
+    # Intenta primero con bcrypt
+    try:
+        return pwd_context.verify(plain_password, hashed_password)
+    except:
+        pass
+    
+    # Si falla, intenta con SHA256 (método antiguo)
+    import hashlib
+    sha256_hash = hashlib.sha256(plain_password.encode()).hexdigest()
+    return sha256_hash == hashed_password
+
+def generar_token_verificacion() -> str:
+    """Genera token para verificación de email"""
+    import secrets
     return secrets.token_urlsafe(32)
+
+def crear_access_token(data: dict, expires_delta: timedelta = None) -> str:
+    """Crea JWT token de acceso"""
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+def verificar_token(token: str) -> dict:
+    """Verifica y decodifica JWT token"""
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        usuario_id: int = payload.get("sub")
+        if usuario_id is None:
+            raise HTTPException(status_code=401, detail="Token inválido")
+        return {"usuario_id": usuario_id}
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Token expirado o inválido")
+
+def get_current_user(token: str, db: Session = Depends(get_db)):
+    """Dependency para obtener usuario actual desde el token"""
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        usuario_id: int = payload.get("sub")
+        if usuario_id is None:
+            raise HTTPException(status_code=401, detail="Token inválido")
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Token expirado o inválido")
+    
+    usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()
+    if usuario is None:
+        raise HTTPException(status_code=401, detail="Usuario no encontrado")
+    return usuario
 
 # ==================== REGISTRO ====================
 @router.post("/registro")
@@ -67,7 +134,7 @@ def registro(datos: UsuarioRegistro, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Ya estás registrado.")
     
     # Crear usuario
-    token = generar_token()
+    token = generar_token_verificacion()
     nuevo_usuario = Usuario(
         universidad=estudiante.universidad,
         numero_documento=estudiante.numero_documento,
@@ -85,9 +152,14 @@ def registro(datos: UsuarioRegistro, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(nuevo_usuario)
     
+    # Crear token de acceso JWT
+    access_token = crear_access_token(data={"sub": nuevo_usuario.id})
+    
     return {
         "success": True,
         "mensaje": f"Registro exitoso. Bienvenido {nuevo_usuario.nombres}",
+        "access_token": access_token,
+        "token_type": "bearer",
         "usuario": {
             "id": nuevo_usuario.id,
             "universidad": nuevo_usuario.universidad,
@@ -99,7 +171,7 @@ def registro(datos: UsuarioRegistro, db: Session = Depends(get_db)):
 # ==================== LOGIN ====================
 @router.post("/login")
 def login(datos: UsuarioLogin, db: Session = Depends(get_db)):
-    """Login con DNI"""
+    """Login con DNI y generación de JWT token"""
     
     # Limpiar DNI
     dni = datos.dni.strip().upper()
@@ -116,8 +188,8 @@ def login(datos: UsuarioLogin, db: Session = Depends(get_db)):
     if not usuario:
         raise HTTPException(status_code=401, detail="DNI o contraseña incorrectos")
     
-    # Verificar contraseña
-    if usuario.contraseña_hash != hash_password(datos.contraseña):
+    # Verificar contraseña con bcrypt
+    if not verify_password(datos.contraseña, usuario.contraseña_hash):
         raise HTTPException(status_code=401, detail="DNI o contraseña incorrectos")
     
     if not usuario.email_verificado:
@@ -126,9 +198,14 @@ def login(datos: UsuarioLogin, db: Session = Depends(get_db)):
             detail="Debes verificar tu correo antes de iniciar sesión."
         )
     
+    # Crear JWT token
+    access_token = crear_access_token(data={"sub": usuario.id})
+    
     return {
         "success": True,
         "mensaje": f"¡Bienvenido {usuario.nombres}!",
+        "access_token": access_token,
+        "token_type": "bearer",
         "usuario": {
             "id": usuario.id,
             "universidad": usuario.universidad,
@@ -136,6 +213,46 @@ def login(datos: UsuarioLogin, db: Session = Depends(get_db)):
             "apellidos": f"{usuario.apellido_paterno} {usuario.apellido_materno}",
             "correo": usuario.correo_universidad
         }
+    }
+
+# ==================== OBTENER USUARIO ACTUAL ====================
+@router.get("/me")
+def obtener_usuario_actual(token: str = None, db: Session = Depends(get_db)):
+    """Obtener información del usuario autenticado"""
+    if not token:
+        raise HTTPException(status_code=401, detail="Token requerido")
+    
+    usuario = get_current_user(token, db)
+    
+    return {
+        "success": True,
+        "usuario": {
+            "id": usuario.id,
+            "universidad": usuario.universidad,
+            "numero_documento": usuario.numero_documento,
+            "nombres": usuario.nombres,
+            "apellidos": f"{usuario.apellido_paterno} {usuario.apellido_materno}",
+            "correo": usuario.correo_universidad,
+            "email_verificado": usuario.email_verificado
+        }
+    }
+
+# ==================== REFRESCAR TOKEN ====================
+@router.post("/refresh")
+def refrescar_token(token: str = None, db: Session = Depends(get_db)):
+    """Refrescar JWT token"""
+    if not token:
+        raise HTTPException(status_code=401, detail="Token requerido")
+    
+    usuario = get_current_user(token, db)
+    
+    # Crear nuevo token
+    new_access_token = crear_access_token(data={"sub": usuario.id})
+    
+    return {
+        "success": True,
+        "access_token": new_access_token,
+        "token_type": "bearer"
     }
 
 # ==================== VERIFICAR EMAIL ====================

@@ -12,6 +12,10 @@ class UsuarioLogin(BaseModel):
     dni: str
     contraseña: str
 
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str
+
 class EstudianteHabilitadoCreate(BaseModel):
     universidad: str
     tipo_documento: str
