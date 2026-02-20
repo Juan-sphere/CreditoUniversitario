@@ -44,17 +44,20 @@
             <select
               v-model="form.universidad"
               required
-              :disabled="loadingUniversidades || datosAutocompletados"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white appearance-none pr-10 text-sm"
+              disabled
+              class="w-full px-3 cursor-not-allowed py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 appearance-none pr-10 text-sm"
             >
-              <option value="" class="text-sm disabled:bg-gray-50">
+              <option
+                value=""
+                class="text-sm disabled:bg-gray-300 cursor-not-allowed"
+              >
                 Selecciona tu universidad
               </option>
               <option
                 v-for="uni in universidades"
                 :key="uni"
                 :value="uni"
-                class="disabled:bg-gray-50"
+                class="disabled:bg-gray-50 cursor-not-allowed"
               >
                 {{ uni }}
               </option>
@@ -140,8 +143,8 @@
               v-model="form.correo"
               type="email"
               required
-              :disabled="datosAutocompletados"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white disabled:bg-gray-50 text-sm"
+              disabled
+              class="w-full px-3 py-2 border cursor-not-allowed border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 text-sm"
               placeholder="tu@universidad.edu.pe"
             />
           </div>
