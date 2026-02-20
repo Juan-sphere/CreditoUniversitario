@@ -18,7 +18,8 @@ const menuItems = [
     { label: 'Información económica del núcleo familiar', path: '/informacion-economica' },
     { label: 'Patrimonio del nucleo familiar', path: '/patrimonio-familiar' },
     { label: 'Documentos de sustentación', path: '/documentos-sustentacion' },
-    { label: 'Enviar Solicitud', path: '/enviar-solicitud' }
+    { label: 'Enviar Solicitud', path: '/enviar-solicitud' },
+    { label: 'Dudas o Consultas', path: '/dudas-consultas' }
 ]
 </script>
 

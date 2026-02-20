@@ -5,27 +5,33 @@
         <div class="grid grid-cols-4 gap-4 p-4">
           <div class="flex flex-col gap-2">
             <label class="text-gray-700 font-semibold">Apellido paterno</label>
-            <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded" />
+            <input v-model="apellidoPaterno" type="text" disabled
+              class="w-full px-3 py-1 border border-gray-300 rounded bg-gray-100 cursor-not-allowed" />
           </div>
           <div class="flex flex-col gap-2">
             <label class="text-gray-700 font-semibold">Apellido materno</label>
-            <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded" />
+            <input v-model="apellidoMaterno" type="text" disabled
+              class="w-full px-3 py-1 border border-gray-300 rounded bg-gray-100 cursor-not-allowed" />
           </div>
           <div class="flex flex-col gap-2">
             <label class="text-gray-700 font-semibold">Nombre</label>
-            <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded" />
+            <input v-model="nombre" type="text" disabled
+              class="w-full px-3 py-1 border border-gray-300 rounded bg-gray-100 cursor-not-allowed" />
           </div>
           <div class="flex flex-col gap-2">
             <label class="text-gray-700 font-semibold">Segundo nombre</label>
-            <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded" />
+            <input v-model="segundoNombre" type="text" disabled
+              class="w-full px-3 py-1 border border-gray-300 rounded bg-gray-100 cursor-not-allowed" />
           </div>
           <div class="col-span-1 flex flex-col gap-2">
             <label class="text-gray-700 font-semibold">DNI</label>
-            <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded" />
+            <input v-model="dni" type="text" disabled
+              class="w-full px-3 py-1 border border-gray-300 rounded bg-gray-100 cursor-not-allowed" />
           </div>
           <div class="col-span-2 flex flex-col gap-2">
             <label class="text-gray-700 font-semibold">Correo electrónico universidad</label>
-            <input type="email" class="w-full px-3 py-1 border border-gray-300 rounded" required />
+            <input v-model="correoUniversidad" type="email" disabled
+              class="w-full px-3 py-1 border border-gray-300 rounded bg-gray-100 cursor-not-allowed" required />
           </div>
         </div>
       </template>
@@ -250,8 +256,7 @@
                 </span>
               </p>
             </div>
-            <div ref="mapContainerDireccion" class="w-full rounded border border-gray-300"
-              style="height: 220px"></div>
+            <div ref="mapContainerDireccion" class="w-full rounded border border-gray-300" style="height: 220px"></div>
           </div>
 
           <div class="w-full flex justify-between items-center mt-5">
@@ -349,6 +354,14 @@ const activeTab = ref(0);
 const postulanteTrabaja = ref("");
 const tiposTrabajo = ref<string[]>([]);
 
+// Campos de información personal
+const apellidoPaterno = ref("");
+const apellidoMaterno = ref("");
+const nombre = ref("");
+const segundoNombre = ref("");
+const dni = ref("");
+const correoUniversidad = ref("");
+
 // Campos de dirección
 const tipoVia = ref("");
 const nombreVia = ref("");
@@ -381,6 +394,20 @@ const direccionQuery = computed(() => {
 });
 
 onMounted(() => {
+  // Cargar datos del usuario autenticado
+  const { usuario } = useAuth();
+
+  if (usuario.value) {
+    // Los datos vienen del login y están guardados en localStorage
+    apellidoPaterno.value = usuario.value.apellido_paterno || "";
+    apellidoMaterno.value = usuario.value.apellido_materno || "";
+    nombre.value = usuario.value.nombre || "";
+    segundoNombre.value = usuario.value.segundo_nombre || "";
+    dni.value = usuario.value.numero_documento || "";
+    correoUniversidad.value = usuario.value.correo_universidad || "";
+  }
+
+  // Cargar Google Maps
   const esNuevoAPI = () =>
     !!(window as any).google?.maps?.places?.AutocompleteSuggestion;
 
