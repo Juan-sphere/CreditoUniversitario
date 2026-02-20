@@ -110,15 +110,11 @@
                 class="w-full px-3 py-1 border border-gray-300 rounded"
               />
             </div>
-            <div class="flex flex-col gap-2">
-              <label class="text-gray-700 font-semibold"
-                >Lugar de nacimiento
-                <span class="text-red-500">(*)</span></label
-              >
-              <select class="w-full px-3 py-1 border border-gray-300 rounded">
-                <option>--Seleccione--</option>
-              </select>
-            </div>
+            <ProvinceSelect
+              v-model="lugarNacimiento"
+              label="Lugar de nacimiento"
+              :required="true"
+            />
             <div class="flex flex-col gap-2">
               <label class="text-gray-700 font-semibold"
                 >Sexo <span class="text-red-500">(*)</span></label
@@ -572,6 +568,9 @@ const nombreVia = ref("");
 const numeroVivienda = ref("");
 const urbanizacion = ref("");
 const distrito = ref("");
+
+// Lugar de nacimiento
+const lugarNacimiento = ref("");
 
 // Estado del buscador de dirección
 const sugerenciasDireccion = ref<any[]>([]);
