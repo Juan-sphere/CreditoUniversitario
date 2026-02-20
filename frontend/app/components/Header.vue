@@ -99,7 +99,7 @@
             <!-- Info usuario -->
             <div class="px-4 py-3 border-b border-gray-100">
               <p class="text-sm font-medium text-gray-900">
-                {{ nombreCompleto || "Pepe Garcia" }}
+                {{ nombreCompleto }}
               </p>
               <p class="text-xs text-gray-500 truncate">{{ universidad }}</p>
             </div>
