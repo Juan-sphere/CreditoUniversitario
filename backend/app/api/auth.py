@@ -181,6 +181,7 @@ def registro(datos: UsuarioRegistro, db: Session = Depends(get_db)):
         numero_documento=estudiante.numero_documento,
         tipo_documento=estudiante.tipo_documento,
         nombre=estudiante.nombre,
+        segundo_nombre=estudiante.segundo_nombre,
         apellido_paterno=estudiante.apellido_paterno,
         apellido_materno=estudiante.apellido_materno,
         correo_universidad=estudiante.correo_universidad,
@@ -204,8 +205,15 @@ def registro(datos: UsuarioRegistro, db: Session = Depends(get_db)):
         "usuario": {
             "id": nuevo_usuario.id,
             "universidad": nuevo_usuario.universidad,
+            "numero_documento": nuevo_usuario.numero_documento,
+            "tipo_documento": nuevo_usuario.tipo_documento,
             "nombre": nuevo_usuario.nombre,
+            "segundo_nombre": nuevo_usuario.segundo_nombre,
+            "apellido_paterno": nuevo_usuario.apellido_paterno,
+            "apellido_materno": nuevo_usuario.apellido_materno,
             "apellidos": f"{nuevo_usuario.apellido_paterno} {nuevo_usuario.apellido_materno}",
+            "correo_universidad": nuevo_usuario.correo_universidad,
+            "email_verificado": nuevo_usuario.email_verificado,
         },
     }
 
