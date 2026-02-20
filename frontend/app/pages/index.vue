@@ -121,9 +121,13 @@ import { useRouter } from "vue-router";
 
 definePageMeta({
   layout: false,
+  middleware: [], // Desactivar middleware auth en esta página pública
 });
 
 const router = useRouter();
+const config = useRuntimeConfig();
+const { setToken } = useAuth();
+
 const form = ref({ dni: "", password: "" });
 const error = ref("");
 const loading = ref(false);
@@ -133,25 +137,26 @@ async function login() {
   loading.value = true;
 
   try {
-    const response = await fetch("http://localhost:5000/auth/login", {
+    const response = await $fetch("/auth/login", {
+      baseURL: config.public.apiBase,
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+      body: {
         dni: form.value.dni,
         contraseña: form.value.password,
-      }),
+      },
     });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.detail || "Error al iniciar sesión");
+    if (!response.success) {
+      throw new Error(response.detail || "Error al iniciar sesión");
     }
 
-    localStorage.setItem("usuario", JSON.stringify(data.usuario));
+    // Guardar token y usuario
+    setToken(response.access_token, response.usuario);
+
+    // Redirigir a la siguiente página
     router.push("/instrucciones");
   } catch (err: any) {
-    error.value = err.message;
+    error.value = err.message || "Error al iniciar sesión";
   } finally {
     loading.value = false;
   }

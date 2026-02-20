@@ -137,19 +137,12 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
+const { usuario, logout } = useAuth();
 const isOpen = ref(false);
 const dropdown = ref<HTMLElement | null>(null);
 
-const usuario = ref<any>(null);
-
-// Cargar datos del usuario
+// Cerrar dropdown al hacer click fuera
 onMounted(() => {
-  const usuarioData = localStorage.getItem("usuario");
-  if (usuarioData) {
-    usuario.value = JSON.parse(usuarioData);
-  }
-
-  // Cerrar dropdown al hacer click fuera
   document.addEventListener("click", handleClickOutside);
 });
 
@@ -182,9 +175,9 @@ function handleClickOutside(event: MouseEvent) {
   }
 }
 
-function cerrarSesion() {
-  localStorage.removeItem("usuario");
-  router.push("/");
+async function cerrarSesion() {
+  logout();
+  await router.push("/");
 }
 </script>
 
