@@ -5,50 +5,83 @@
         <div class="grid grid-cols-4 gap-4 p-4">
           <div class="flex flex-col gap-2">
             <label class="text-gray-700 font-semibold">Apellido paterno</label>
-            <input v-model="apellidoPaterno" type="text" disabled
-              class="w-full px-3 py-1 border border-gray-300 rounded bg-gray-100 cursor-not-allowed" />
+            <input
+              v-model="apellidoPaterno"
+              type="text"
+              disabled
+              class="w-full px-3 py-1 border border-gray-300 rounded bg-gray-100 cursor-not-allowed"
+            />
           </div>
           <div class="flex flex-col gap-2">
             <label class="text-gray-700 font-semibold">Apellido materno</label>
-            <input v-model="apellidoMaterno" type="text" disabled
-              class="w-full px-3 py-1 border border-gray-300 rounded bg-gray-100 cursor-not-allowed" />
+            <input
+              v-model="apellidoMaterno"
+              type="text"
+              disabled
+              class="w-full px-3 py-1 border border-gray-300 rounded bg-gray-100 cursor-not-allowed"
+            />
           </div>
           <div class="flex flex-col gap-2">
             <label class="text-gray-700 font-semibold">Nombre</label>
-            <input v-model="nombre" type="text" disabled
-              class="w-full px-3 py-1 border border-gray-300 rounded bg-gray-100 cursor-not-allowed" />
+            <input
+              v-model="nombre"
+              type="text"
+              disabled
+              class="w-full px-3 py-1 border border-gray-300 rounded bg-gray-100 cursor-not-allowed"
+            />
           </div>
           <div class="flex flex-col gap-2">
             <label class="text-gray-700 font-semibold">Segundo nombre</label>
-            <input v-model="segundoNombre" type="text" disabled
-              class="w-full px-3 py-1 border border-gray-300 rounded bg-gray-100 cursor-not-allowed" />
+            <input
+              v-model="segundoNombre"
+              type="text"
+              disabled
+              class="w-full px-3 py-1 border border-gray-300 rounded bg-gray-100 cursor-not-allowed"
+            />
           </div>
           <div class="col-span-1 flex flex-col gap-2">
             <label class="text-gray-700 font-semibold">DNI</label>
-            <input v-model="dni" type="text" disabled
-              class="w-full px-3 py-1 border border-gray-300 rounded bg-gray-100 cursor-not-allowed" />
+            <input
+              v-model="dni"
+              type="text"
+              disabled
+              class="w-full px-3 py-1 border border-gray-300 rounded bg-gray-100 cursor-not-allowed"
+            />
           </div>
           <div class="col-span-2 flex flex-col gap-2">
-            <label class="text-gray-700 font-semibold">Correo electrónico universidad</label>
-            <input v-model="correoUniversidad" type="email" disabled
-              class="w-full px-3 py-1 border border-gray-300 rounded bg-gray-100 cursor-not-allowed" required />
+            <label class="text-gray-700 font-semibold"
+              >Correo electrónico universidad</label
+            >
+            <input
+              v-model="correoUniversidad"
+              type="email"
+              disabled
+              class="w-full px-3 py-1 border border-gray-300 rounded text-black bg-gray-100 cursor-not-allowed"
+              required
+            />
           </div>
         </div>
       </template>
     </Information>
 
-    <Register :tabs="[
-      'Información adicional',
-      'Correo electrónico',
-      'Dirección',
-      'Datos laborales',
-    ]" :activeTab="activeTab" @tab-change="activeTab = $event">
+    <Register
+      :tabs="[
+        'Información adicional',
+        'Correo electrónico',
+        'Dirección',
+        'Datos laborales',
+      ]"
+      :activeTab="activeTab"
+      @tab-change="activeTab = $event"
+    >
       <template #register>
         <!-- Información adicional -->
         <div class="p-2" v-if="activeTab === 0">
           <div class="grid grid-cols-2 gap-4">
             <div class="flex flex-col gap-2">
-              <label class="text-gray-700 font-semibold">Estado Civil <span class="text-red-500">(*)</span></label>
+              <label class="text-gray-700 font-semibold"
+                >Estado Civil <span class="text-red-500">(*)</span></label
+              >
               <select class="w-full px-3 py-1 border border-gray-300 rounded">
                 <option>--Seleccione--</option>
                 <option>Soltero(a)</option>
@@ -58,7 +91,9 @@
               </select>
             </div>
             <div class="flex flex-col gap-2">
-              <label class="text-gray-700 font-semibold">Es conviviente? <span class="text-red-500">(*)</span></label>
+              <label class="text-gray-700 font-semibold"
+                >Es conviviente? <span class="text-red-500">(*)</span></label
+              >
               <select class="w-full px-3 py-1 border border-gray-300 rounded">
                 <option>--Seleccione--</option>
                 <option>Sí</option>
@@ -66,19 +101,28 @@
               </select>
             </div>
             <div class="flex flex-col gap-2">
-              <label class="text-gray-700 font-semibold">Fecha de nacimiento
-                <span class="text-red-500">(*)</span></label>
-              <input type="date" class="w-full px-3 py-1 border border-gray-300 rounded" />
+              <label class="text-gray-700 font-semibold"
+                >Fecha de nacimiento
+                <span class="text-red-500">(*)</span></label
+              >
+              <input
+                type="date"
+                class="w-full px-3 py-1 border border-gray-300 rounded"
+              />
             </div>
             <div class="flex flex-col gap-2">
-              <label class="text-gray-700 font-semibold">Lugar de nacimiento
-                <span class="text-red-500">(*)</span></label>
+              <label class="text-gray-700 font-semibold"
+                >Lugar de nacimiento
+                <span class="text-red-500">(*)</span></label
+              >
               <select class="w-full px-3 py-1 border border-gray-300 rounded">
                 <option>--Seleccione--</option>
               </select>
             </div>
             <div class="flex flex-col gap-2">
-              <label class="text-gray-700 font-semibold">Sexo <span class="text-red-500">(*)</span></label>
+              <label class="text-gray-700 font-semibold"
+                >Sexo <span class="text-red-500">(*)</span></label
+              >
               <select class="w-full px-3 py-1 border border-gray-300 rounded">
                 <option>--Seleccione--</option>
                 <option>Masculino</option>
@@ -86,8 +130,15 @@
               </select>
             </div>
             <div class="flex flex-col gap-2">
-              <label class="text-gray-700 font-semibold">Telefono celular <span class="text-red-500">(*)</span></label>
-              <input type="number" class="w-full px-3 py-1 border border-gray-300 rounded" min="0" required />
+              <label class="text-gray-700 font-semibold"
+                >Telefono celular <span class="text-red-500">(*)</span></label
+              >
+              <input
+                type="number"
+                class="w-full px-3 py-1 border border-gray-300 rounded"
+                min="0"
+                required
+              />
             </div>
           </div>
           <div class="w-full flex justify-between items-center mt-5">
@@ -101,16 +152,28 @@
         <div class="p-2" v-if="activeTab === 1">
           <div class="grid grid-cols-2 gap-4">
             <div class="flex flex-col gap-2">
-              <label class="text-gray-700 font-semibold">Correo electrónico personal
-                <span class="text-red-500">(*)</span></label>
-              <input type="email" class="w-full px-3 py-1 border border-gray-300 rounded"
-                placeholder="usuario@dominio.com" required />
+              <label class="text-gray-700 font-semibold"
+                >Correo electrónico personal
+                <span class="text-red-500">(*)</span></label
+              >
+              <input
+                type="email"
+                class="w-full px-3 py-1 border text-black border-gray-300 rounded"
+                placeholder="usuario@dominio.com"
+                required
+              />
             </div>
             <div class="flex flex-col gap-2">
-              <label class="text-gray-700 font-semibold">Correo electrónico laboral
-                <span class="text-red-500">(*)</span></label>
-              <input type="email" class="w-full px-3 py-1 border border-gray-300 rounded"
-                placeholder="usuario@dominio.com" required />
+              <label class="text-gray-700 font-semibold"
+                >Correo electrónico laboral
+                <span class="text-red-500">(*)</span></label
+              >
+              <input
+                type="email"
+                class="w-full px-3 py-1 border border-gray-300 rounded"
+                placeholder="usuario@dominio.com"
+                required
+              />
             </div>
           </div>
           <div class="w-full flex justify-between items-center mt-5">
@@ -124,9 +187,15 @@
         <div class="p-2" v-if="activeTab === 2">
           <div class="grid grid-cols-2 gap-4">
             <div class="flex flex-col gap-2">
-              <label class="text-gray-700 font-semibold">Tipo de vía <span class="text-red-500">(*)</span></label>
-              <select v-model="tipoVia" class="w-full px-3 py-1 border border-gray-300 rounded" required
-                @change="limpiarConfirmacion">
+              <label class="text-gray-700 font-semibold"
+                >Tipo de vía <span class="text-red-500">(*)</span></label
+              >
+              <select
+                v-model="tipoVia"
+                class="w-full px-3 py-1 border border-gray-300 rounded"
+                required
+                @change="limpiarConfirmacion"
+              >
                 <option value="">--Seleccione--</option>
                 <option>Calle</option>
                 <option>Pasaje</option>
@@ -136,25 +205,54 @@
               </select>
             </div>
             <div class="flex flex-col gap-2">
-              <label class="text-gray-700 font-semibold">Nombre de la vía <span class="text-red-500">(*)</span></label>
-              <input type="text" v-model="nombreVia" class="w-full px-3 py-1 border border-gray-300 rounded"
-                placeholder="Nombre de la calle o avenida" required @input="limpiarConfirmacion" />
+              <label class="text-gray-700 font-semibold"
+                >Nombre de la vía <span class="text-red-500">(*)</span></label
+              >
+              <input
+                type="text"
+                v-model="nombreVia"
+                class="w-full px-3 py-1 border border-gray-300 rounded"
+                placeholder="Nombre de la calle o avenida"
+                required
+                @input="limpiarConfirmacion"
+              />
             </div>
             <div class="flex flex-col gap-2">
-              <label class="text-gray-700 font-semibold">Número de vivienda <span
-                  class="text-red-500">(*)</span></label>
-              <input type="text" v-model="numeroVivienda" class="w-full px-3 py-1 border border-gray-300 rounded"
-                placeholder="Número del domicilio" required @input="limpiarConfirmacion" />
+              <label class="text-gray-700 font-semibold"
+                >Número de vivienda <span class="text-red-500">(*)</span></label
+              >
+              <input
+                type="text"
+                v-model="numeroVivienda"
+                class="w-full px-3 py-1 border border-gray-300 rounded"
+                placeholder="Número del domicilio"
+                required
+                @input="limpiarConfirmacion"
+              />
             </div>
             <div class="flex flex-col gap-2">
-              <label class="text-gray-700 font-semibold">Urbanización <span class="text-red-500">(*)</span></label>
-              <input type="text" v-model="urbanizacion" class="w-full px-3 py-1 border border-gray-300 rounded"
-                placeholder="Nombre de urbanización" required @input="limpiarConfirmacion" />
+              <label class="text-gray-700 font-semibold"
+                >Urbanización <span class="text-red-500">(*)</span></label
+              >
+              <input
+                type="text"
+                v-model="urbanizacion"
+                class="w-full px-3 py-1 border border-gray-300 rounded"
+                placeholder="Nombre de urbanización"
+                required
+                @input="limpiarConfirmacion"
+              />
             </div>
             <div class="flex flex-col gap-2 col-span-2">
-              <label class="text-gray-700 font-semibold">Distrito <span class="text-red-500">(*)</span></label>
-              <select v-model="distrito" class="w-full px-3 py-1 border border-gray-300 rounded" required
-                @change="limpiarConfirmacion">
+              <label class="text-gray-700 font-semibold"
+                >Distrito <span class="text-red-500">(*)</span></label
+              >
+              <select
+                v-model="distrito"
+                class="w-full px-3 py-1 border border-gray-300 rounded"
+                required
+                @change="limpiarConfirmacion"
+              >
                 <option value="">--Seleccione--</option>
                 <option>Ancón</option>
                 <option>Ate</option>
@@ -206,31 +304,58 @@
           <!-- Sugerencias y mapa -->
           <div class="mt-4" v-if="direccionQuery">
             <!-- Spinner de búsqueda -->
-            <div v-if="buscandoDireccion" class="flex items-center gap-2 text-sm text-gray-500 mb-2">
-              <svg class="animate-spin h-4 w-4 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
-                viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+            <div
+              v-if="buscandoDireccion"
+              class="flex items-center gap-2 text-sm text-gray-500 mb-2"
+            >
+              <svg
+                class="animate-spin h-4 w-4 text-blue-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                />
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                />
               </svg>
               <span>Buscando dirección...</span>
             </div>
 
             <!-- Lista de sugerencias -->
-            <div v-if="sugerenciasDireccion.length > 0 && !direccionConfirmada"
-              class="border border-gray-300 rounded shadow-md bg-white">
-              <p class="px-3 py-1 text-xs text-gray-400 border-b border-gray-100">
+            <div
+              v-if="sugerenciasDireccion.length > 0 && !direccionConfirmada"
+              class="border border-gray-300 rounded shadow-md bg-white"
+            >
+              <p
+                class="px-3 py-1 text-xs text-gray-400 border-b border-gray-100"
+              >
                 Selecciona una opción para confirmar la ubicación:
               </p>
               <ul class="max-h-48 overflow-y-auto">
-                <li v-for="(sugerencia, index) in sugerenciasDireccion" :key="index"
+                <li
+                  v-for="(sugerencia, index) in sugerenciasDireccion"
+                  :key="index"
                   @click="seleccionarDireccion(sugerencia)"
-                  class="px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm border-b border-gray-100 last:border-0">
+                  class="px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm border-b border-gray-100 last:border-0"
+                >
                   <span class="font-medium">{{
                     sugerencia.placePrediction?.mainText?.text ||
                     sugerencia.placePrediction?.text?.text
                   }}</span>
-                  <span v-if="sugerencia.placePrediction?.secondaryText?.text"
-                    class="block text-xs text-gray-500 mt-0.5">
+                  <span
+                    v-if="sugerencia.placePrediction?.secondaryText?.text"
+                    class="block text-xs text-gray-500 mt-0.5"
+                  >
                     {{ sugerencia.placePrediction.secondaryText.text }}
                   </span>
                 </li>
@@ -238,25 +363,40 @@
             </div>
 
             <!-- Error de Maps -->
-            <p v-if="errorMaps" class="text-xs text-red-500 mt-1">{{ errorMaps }}</p>
+            <p v-if="errorMaps" class="text-xs text-red-500 mt-1">
+              {{ errorMaps }}
+            </p>
           </div>
 
           <!-- Dirección confirmada + mapa -->
           <div v-if="direccionConfirmada" class="mt-4">
             <div class="flex items-center gap-2 mb-2">
-              <svg class="w-4 h-4 text-green-600 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd"
+              <svg
+                class="w-4 h-4 text-green-600 shrink-0"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clip-rule="evenodd" />
+                  clip-rule="evenodd"
+                />
               </svg>
               <p class="text-sm text-gray-700 truncate">
                 <strong>{{ direccionConfirmada.main_text }}</strong>
-                <span v-if="direccionConfirmada.secondary_text" class="text-gray-500 ml-1">
+                <span
+                  v-if="direccionConfirmada.secondary_text"
+                  class="text-gray-500 ml-1"
+                >
                   — {{ direccionConfirmada.secondary_text }}
                 </span>
               </p>
             </div>
-            <div ref="mapContainerDireccion" class="w-full rounded border border-gray-300" style="height: 220px"></div>
+            <div
+              ref="mapContainerDireccion"
+              class="w-full rounded border border-gray-300"
+              style="height: 220px"
+            ></div>
           </div>
 
           <div class="w-full flex justify-between items-center mt-5">
@@ -269,9 +409,15 @@
         <!-- Datos laborales -->
         <div class="flex flex-col gap-4 p-2" v-if="activeTab === 3">
           <div class="flex flex-col gap-2">
-            <label class="text-gray-700 font-semibold">¿El postulante trabaja?
-              <span class="text-red-500">(*)</span></label>
-            <select v-model="postulanteTrabaja" class="w-full px-3 py-1 border border-gray-300 rounded" required>
+            <label class="text-gray-700 font-semibold"
+              >¿El postulante trabaja?
+              <span class="text-red-500">(*)</span></label
+            >
+            <select
+              v-model="postulanteTrabaja"
+              class="w-full px-3 py-1 border border-gray-300 rounded"
+              required
+            >
               <option value="">--Seleccione--</option>
               <option value="Si">Sí</option>
               <option value="No">No</option>
@@ -280,52 +426,110 @@
 
           <template v-if="postulanteTrabaja === 'Si'">
             <div>
-              <label class="text-gray-700 font-semibold">Tipo de trabajo <span class="text-red-500">(*)</span></label>
+              <label class="text-gray-700 font-semibold"
+                >Tipo de trabajo <span class="text-red-500">(*)</span></label
+              >
               <div class="grid grid-cols-1 gap-2 mt-2 pl-2">
                 <div class="flex items-center">
-                  <input type="checkbox" id="trabajo1" value="Trabajo dependiente formal en planilla"
-                    v-model="tiposTrabajo" class="w-4 h-4" />
-                  <label for="trabajo1" class="ml-2 text-gray-700">Trabajo dependiente formal en planilla</label>
+                  <input
+                    type="checkbox"
+                    id="trabajo1"
+                    value="Trabajo dependiente formal en planilla"
+                    v-model="tiposTrabajo"
+                    class="w-4 h-4"
+                  />
+                  <label for="trabajo1" class="ml-2 text-gray-700"
+                    >Trabajo dependiente formal en planilla</label
+                  >
                 </div>
                 <div class="flex items-center">
-                  <input type="checkbox" id="trabajo2" value="Trabajo dependiente formal en Recibo por Honorarios"
-                    v-model="tiposTrabajo" class="w-4 h-4" />
-                  <label for="trabajo2" class="ml-2 text-gray-700">Trabajo dependiente formal en Recibo por
-                    Honorarios</label>
+                  <input
+                    type="checkbox"
+                    id="trabajo2"
+                    value="Trabajo dependiente formal en Recibo por Honorarios"
+                    v-model="tiposTrabajo"
+                    class="w-4 h-4"
+                  />
+                  <label for="trabajo2" class="ml-2 text-gray-700"
+                    >Trabajo dependiente formal en Recibo por Honorarios</label
+                  >
                 </div>
                 <div class="flex items-center">
-                  <input type="checkbox" id="trabajo3" value="Trabajo dependiente informal" v-model="tiposTrabajo"
-                    class="w-4 h-4" />
-                  <label for="trabajo3" class="ml-2 text-gray-700">Trabajo dependiente informal</label>
+                  <input
+                    type="checkbox"
+                    id="trabajo3"
+                    value="Trabajo dependiente informal"
+                    v-model="tiposTrabajo"
+                    class="w-4 h-4"
+                  />
+                  <label for="trabajo3" class="ml-2 text-gray-700"
+                    >Trabajo dependiente informal</label
+                  >
                 </div>
                 <div class="flex items-center">
-                  <input type="checkbox" id="trabajo4" value="Trabajo independiente informal" v-model="tiposTrabajo"
-                    class="w-4 h-4" />
-                  <label for="trabajo4" class="ml-2 text-gray-700">Trabajo independiente informal</label>
+                  <input
+                    type="checkbox"
+                    id="trabajo4"
+                    value="Trabajo independiente informal"
+                    v-model="tiposTrabajo"
+                    class="w-4 h-4"
+                  />
+                  <label for="trabajo4" class="ml-2 text-gray-700"
+                    >Trabajo independiente informal</label
+                  >
                 </div>
                 <div class="flex items-center">
-                  <input type="checkbox" id="trabajo5" value="Empresa/Negocio propio formal" v-model="tiposTrabajo"
-                    class="w-4 h-4" />
-                  <label for="trabajo5" class="ml-2 text-gray-700">Empresa/Negocio propio formal</label>
+                  <input
+                    type="checkbox"
+                    id="trabajo5"
+                    value="Empresa/Negocio propio formal"
+                    v-model="tiposTrabajo"
+                    class="w-4 h-4"
+                  />
+                  <label for="trabajo5" class="ml-2 text-gray-700"
+                    >Empresa/Negocio propio formal</label
+                  >
                 </div>
                 <div class="flex items-center">
-                  <input type="checkbox" id="trabajo6" value="Empresa/Negocio propio informal" v-model="tiposTrabajo"
-                    class="w-4 h-4" />
-                  <label for="trabajo6" class="ml-2 text-gray-700">Empresa/Negocio propio informal</label>
+                  <input
+                    type="checkbox"
+                    id="trabajo6"
+                    value="Empresa/Negocio propio informal"
+                    v-model="tiposTrabajo"
+                    class="w-4 h-4"
+                  />
+                  <label for="trabajo6" class="ml-2 text-gray-700"
+                    >Empresa/Negocio propio informal</label
+                  >
                 </div>
                 <div class="flex items-center">
-                  <input type="checkbox" id="trabajo7" value="Practicante pre-profesional" v-model="tiposTrabajo"
-                    class="w-4 h-4" />
-                  <label for="trabajo7" class="ml-2 text-gray-700">Practicante pre-profesional</label>
+                  <input
+                    type="checkbox"
+                    id="trabajo7"
+                    value="Practicante pre-profesional"
+                    v-model="tiposTrabajo"
+                    class="w-4 h-4"
+                  />
+                  <label for="trabajo7" class="ml-2 text-gray-700"
+                    >Practicante pre-profesional</label
+                  >
                 </div>
               </div>
             </div>
 
             <div class="flex flex-col gap-2">
-              <label class="text-gray-700 font-semibold">Ingresos mensuales (S/.)
-                <span class="text-red-500">(*)</span></label>
-              <input type="number" class="w-full px-3 py-1 border border-gray-300 rounded" placeholder="Ej: 2500.00"
-                min="0" step="0.01" required />
+              <label class="text-gray-700 font-semibold"
+                >Ingresos mensuales (S/.)
+                <span class="text-red-500">(*)</span></label
+              >
+              <input
+                type="number"
+                class="w-full px-3 py-1 border border-gray-300 rounded"
+                placeholder="Ej: 2500.00"
+                min="0"
+                step="0.01"
+                required
+              />
             </div>
           </template>
 
@@ -472,7 +676,7 @@ const buscarPredicciones = async (input: string): Promise<any[]> => {
     const google = (window as any).google;
     const result =
       await google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions(
-        { input, includedRegionCodes: ["pe"] }
+        { input, includedRegionCodes: ["pe"] },
       );
     return (result.suggestions || []).map((s: any) => markRaw(s));
   } catch (error) {
@@ -488,7 +692,12 @@ const seleccionarDireccion = async (sugerencia: any) => {
   try {
     const place = placePrediction.toPlace();
     await place.fetchFields({
-      fields: ["displayName", "formattedAddress", "location", "addressComponents"],
+      fields: [
+        "displayName",
+        "formattedAddress",
+        "location",
+        "addressComponents",
+      ],
     });
 
     const mainText =
