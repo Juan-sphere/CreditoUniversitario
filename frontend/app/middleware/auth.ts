@@ -1,18 +1,19 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-  // Rutas públicas que no requieren autenticación
-  const rutasPublicas = ["/", "/registro"];
+  // Solo ejecutar en el cliente
+  if (process.server) return;
 
+  // Rutas públicas que NO requieren autenticación
+  const rutasPublicas = ["/", "/registro", "/analista"];
+
+  // Si la ruta es pública, dejar pasar
   if (rutasPublicas.includes(to.path)) {
     return;
   }
 
-  const { token, loadToken, isAuthenticated } = useAuth();
+  // Para cualquier otra ruta, verificar si hay usuario
+  const usuario = localStorage.getItem("usuario");
 
-  if (!token.value) {
-    loadToken();
-  }
-
-  if (!isAuthenticated()) {
+  if (!usuario) {
     return navigateTo("/");
   }
 });
