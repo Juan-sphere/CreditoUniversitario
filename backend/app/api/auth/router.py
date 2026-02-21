@@ -7,9 +7,20 @@ from app.schemas.usuario import (
     UsuarioLogin,
     InformacionPersonalUpdate,
 )
+from app.schemas.parent import (
+    ParentInformationCreate,
+    ParentInformationUpdate,
+    ParentTypeEnum,
+)
+from app.schemas.family import (
+    FamilyInformationCreate,
+    FamilyInformationUpdate,
+)
 from app.services.auth_service import AuthService
 from app.services.informacion_personal_service import InformacionPersonalService
 from app.services.estudiante_service import EstudianteService
+from app.services.parent_service import ParentService
+from app.services.family_service import FamilyService
 from app.services.jwt_service import get_current_user
 from app.utils.token import get_token_from_header
 from app.db.models import Usuario
@@ -142,6 +153,187 @@ def buscar_estudiante(dni: str, db: Session = Depends(get_db)):
     """Buscar estudiante habilitado por DNI para autocompletar registro (sin autenticación)"""
     logger.info(f"[ESTUDIANTE] GET /buscar-estudiante/{dni[:3]}*** - Buscando estudiante")
     return EstudianteService.buscar_estudiante_por_dni(dni, db)
+
+
+# ==================== INFORMACIÓN DE PADRES ====================
+@router.post("/informacion-padres")
+def guardar_padre(
+    datos: ParentInformationCreate,
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Guarda o actualiza la información de un progenitor"""
+    logger.info(f"[PADRE] POST /informacion-padres - Guardando información de {datos.parent_type.value}")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[PADRE] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[PADRE] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return ParentService.guardar_or_actualizar_padre(usuario, datos, db)
+
+
+@router.put("/informacion-padres")
+def actualizar_padre(
+    datos: ParentInformationCreate,
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Actualiza la información de un progenitor existente"""
+    logger.info(f"[PADRE] PUT /informacion-padres - Actualizando información de {datos.parent_type.value}")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[PADRE] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[PADRE] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return ParentService.guardar_or_actualizar_padre(usuario, datos, db)
+
+
+@router.get("/informacion-padres")
+def obtener_padres(
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Obtiene la información de los progenitores"""
+    logger.info("[PADRE] GET /informacion-padres - Obteniendo información de padres")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[PADRE] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[PADRE] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return ParentService.obtener_padres(usuario, db)
+
+
+@router.delete("/informacion-padres/{parent_type}")
+def eliminar_padre(
+    parent_type: ParentTypeEnum,
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Elimina la información de un progenitor"""
+    logger.info(f"[PADRE] DELETE /informacion-padres/{parent_type.value}")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[PADRE] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[PADRE] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return ParentService.eliminar_padre(usuario, parent_type, db)
+
+
+# ==================== INFORMACIÓN DE FAMILIARES ====================
+@router.post("/composicion-familiar")
+def crear_familiar(
+    datos: FamilyInformationCreate,
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Crea un nuevo familiar para el usuario"""
+    logger.info("[FAMILY] POST /composicion-familiar - Creando nuevo familiar")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[FAMILY] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[FAMILY] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return FamilyService.crear_familiar(usuario, datos, db)
+
+
+@router.get("/composicion-familiar")
+def obtener_familiares(
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Obtiene todos los familiares del usuario"""
+    logger.info("[FAMILY] GET /composicion-familiar - Obteniendo familiares")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[FAMILY] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[FAMILY] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return FamilyService.obtener_familiares(usuario, db)
+
+
+@router.get("/composicion-familiar/{familiar_id}")
+def obtener_familiar(
+    familiar_id: int,
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Obtiene un familiar específico"""
+    logger.info(f"[FAMILY] GET /composicion-familiar/{familiar_id}")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[FAMILY] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[FAMILY] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return FamilyService.obtener_familiar(usuario, familiar_id, db)
+
+
+@router.put("/composicion-familiar/{familiar_id}")
+def actualizar_familiar(
+    familiar_id: int,
+    datos: FamilyInformationUpdate,
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Actualiza la información de un familiar"""
+    logger.info(f"[FAMILY] PUT /composicion-familiar/{familiar_id}")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[FAMILY] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[FAMILY] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return FamilyService.actualizar_familiar(usuario, familiar_id, datos, db)
+
+
+@router.delete("/composicion-familiar/{familiar_id}")
+def eliminar_familiar(
+    familiar_id: int,
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Elimina un familiar"""
+    logger.info(f"[FAMILY] DELETE /composicion-familiar/{familiar_id}")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[FAMILY] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[FAMILY] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return FamilyService.eliminar_familiar(usuario, familiar_id, db)
 
 
 # ==================== DEBUG - LISTAR USUARIOS ====================

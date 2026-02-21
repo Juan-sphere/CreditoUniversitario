@@ -687,6 +687,10 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
+definePageMeta({
+  layout: "analyst",
+});
+
 const route = useRoute();
 const router = useRouter();
 
