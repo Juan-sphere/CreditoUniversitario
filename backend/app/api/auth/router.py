@@ -16,11 +16,21 @@ from app.schemas.family import (
     FamilyInformationCreate,
     FamilyInformationUpdate,
 )
+from app.schemas.person_external import (
+    PersonExternalInformationCreate,
+    PersonExternalInformationUpdate,
+)
+from app.schemas.required_document import (
+    RequiredDocumentCreate,
+    RequiredDocumentUpdate,
+)
 from app.services.auth_service import AuthService
 from app.services.informacion_personal_service import InformacionPersonalService
 from app.services.estudiante_service import EstudianteService
 from app.services.parent_service import ParentService
 from app.services.family_service import FamilyService
+from app.services.person_external_service import PersonExternalService
+from app.services.required_document_service import RequiredDocumentService
 from app.services.jwt_service import get_current_user
 from app.utils.token import get_token_from_header
 from app.db.models import Usuario
@@ -334,6 +344,228 @@ def eliminar_familiar(
         raise
 
     return FamilyService.eliminar_familiar(usuario, familiar_id, db)
+
+
+# ==================== PERSONAS EXTERNAS ====================
+@router.post("/personas-externas")
+def crear_persona_externa(
+    datos: PersonExternalInformationCreate,
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Crea una nueva persona externa para el usuario"""
+    logger.info("[PERSON-EXTERNAL] POST /personas-externas - Creando nueva persona externa")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[PERSON-EXTERNAL] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[PERSON-EXTERNAL] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return PersonExternalService.crear_persona(usuario, datos, db)
+
+
+@router.get("/personas-externas")
+def obtener_personas_externas(
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Obtiene todas las personas externas del usuario"""
+    logger.info("[PERSON-EXTERNAL] GET /personas-externas - Obteniendo personas externas")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[PERSON-EXTERNAL] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[PERSON-EXTERNAL] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return PersonExternalService.obtener_personas(usuario, db)
+
+
+@router.get("/personas-externas/{persona_id}")
+def obtener_persona_externa(
+    persona_id: int,
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Obtiene una persona externa específica"""
+    logger.info(f"[PERSON-EXTERNAL] GET /personas-externas/{persona_id}")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[PERSON-EXTERNAL] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[PERSON-EXTERNAL] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return PersonExternalService.obtener_persona(usuario, persona_id, db)
+
+
+@router.put("/personas-externas/{persona_id}")
+def actualizar_persona_externa(
+    persona_id: int,
+    datos: PersonExternalInformationUpdate,
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Actualiza la información de una persona externa"""
+    logger.info(f"[PERSON-EXTERNAL] PUT /personas-externas/{persona_id}")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[PERSON-EXTERNAL] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[PERSON-EXTERNAL] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return PersonExternalService.actualizar_persona(usuario, persona_id, datos, db)
+
+
+@router.delete("/personas-externas/{persona_id}")
+def eliminar_persona_externa(
+    persona_id: int,
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Elimina una persona externa"""
+    logger.info(f"[PERSON-EXTERNAL] DELETE /personas-externas/{persona_id}")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[PERSON-EXTERNAL] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[PERSON-EXTERNAL] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return PersonExternalService.eliminar_persona(usuario, persona_id, db)
+
+
+# ==================== DOCUMENTOS REQUERIDOS ====================
+@router.post("/documentos-sustentacion")
+def crear_documento(
+    datos: RequiredDocumentCreate,
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Crea un nuevo documento requerido para el usuario"""
+    logger.info("[DOCUMENT] POST /documentos-sustentacion - Creando nuevo documento")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[DOCUMENT] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[DOCUMENT] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return RequiredDocumentService.crear_documento(usuario, datos, db)
+
+
+@router.get("/documentos-sustentacion")
+def obtener_documentos(
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Obtiene todos los documentos del usuario"""
+    logger.info("[DOCUMENT] GET /documentos-sustentacion - Obteniendo documentos")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[DOCUMENT] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[DOCUMENT] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return RequiredDocumentService.obtener_documentos(usuario, db)
+
+
+@router.get("/documentos-sustentacion/{documento_id}")
+def obtener_documento(
+    documento_id: int,
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Obtiene un documento específico"""
+    logger.info(f"[DOCUMENT] GET /documentos-sustentacion/{documento_id}")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[DOCUMENT] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[DOCUMENT] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return RequiredDocumentService.obtener_documento(usuario, documento_id, db)
+
+
+@router.get("/documentos-sustentacion/tipo/{tipo}")
+def obtener_documentos_por_tipo(
+    tipo: str,
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Obtiene documentos filtrados por tipo"""
+    logger.info(f"[DOCUMENT] GET /documentos-sustentacion/tipo/{tipo}")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[DOCUMENT] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[DOCUMENT] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return RequiredDocumentService.obtener_documentos_por_tipo(usuario, tipo, db)
+
+
+@router.put("/documentos-sustentacion/{documento_id}")
+def actualizar_documento(
+    documento_id: int,
+    datos: RequiredDocumentUpdate,
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Actualiza la información de un documento"""
+    logger.info(f"[DOCUMENT] PUT /documentos-sustentacion/{documento_id}")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[DOCUMENT] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[DOCUMENT] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return RequiredDocumentService.actualizar_documento(usuario, documento_id, datos, db)
+
+
+@router.delete("/documentos-sustentacion/{documento_id}")
+def eliminar_documento(
+    documento_id: int,
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Elimina un documento"""
+    logger.info(f"[DOCUMENT] DELETE /documentos-sustentacion/{documento_id}")
+
+    try:
+        token = get_token_from_header(authorization)
+        usuario = get_current_user(token, db)
+        logger.info(f"[DOCUMENT] Usuario autenticado: {usuario.nombre}")
+    except Exception as e:
+        logger.error(f"[DOCUMENT] ❌ Error de autenticación: {str(e)}")
+        raise
+
+    return RequiredDocumentService.eliminar_documento(usuario, documento_id, db)
 
 
 # ==================== DEBUG - LISTAR USUARIOS ====================

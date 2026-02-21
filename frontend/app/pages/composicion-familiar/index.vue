@@ -1,7 +1,9 @@
 <template>
   <div class="w-full">
     <!-- Loading Spinner mientras carga datos -->
-    <LoadingSpinner v-if="cargando" />
+    <div v-if="cargando" class="flex justify-center items-center h-96">
+      <LoadingSpinner />
+    </div>
 
     <!-- Contenido principal -->
     <div v-else>
