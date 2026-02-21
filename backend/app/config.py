@@ -5,7 +5,7 @@ load_dotenv()
 
 
 class Config:
-    SECRET_KEY = os.getenv("SECRET_KEY", "tu-clave-secreta-super-segura")
+    SECRET_KEY = os.getenv("SECRET_KEY")
     SESSION_COOKIE_SECURE = False
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Lax"
@@ -20,8 +20,8 @@ RUTAS_PUBLICAS = [
     "/auth/registro",
     "/auth/login",
     "/auth/verificar",
-    "/auth/universidades",  # Listar universidades sin autenticación
-    "/auth/buscar-estudiante",  # Buscar estudiante por DNI sin autenticación
+    "/auth/universidades", 
+    "/auth/buscar-estudiante", 
 ]
 
 # Prefijos de rutas públicas (rutas que comienzan con estos prefijos son públicas)

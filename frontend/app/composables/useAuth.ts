@@ -2,33 +2,40 @@ export const useAuth = () => {
   const config = useRuntimeConfig();
   const apiBase = config.public.apiBase;
 
-  const token = useState<string | null>("auth.token", () => null);
-  const usuario = useState<any>("auth.usuario", () => null);
+  // Usar cookies en lugar de localStorage (más seguro)
+  const tokenCookie = useCookie<string | null>("auth_token", {
+    maxAge: 60 * 60 * 24, // 24 horas
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+  });
 
-  // Cargar token desde localStorage
+  const usuarioCookie = useCookie<any>("auth_usuario", {
+    maxAge: 60 * 60 * 24, // 24 horas
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+  });
+
+  const token = useState<string | null>("auth.token", () => tokenCookie.value);
+  const usuario = useState<any>("auth.usuario", () => usuarioCookie.value);
+
+  // Cargar token desde cookies (sincronizar estado)
   const loadToken = () => {
-    if (process.client) {
-      const storedToken = localStorage.getItem("auth_token");
-      const storedUsuario = localStorage.getItem("auth_usuario");
-
-      if (storedToken) {
-        token.value = storedToken;
-      }
-      if (storedUsuario) {
-        usuario.value = JSON.parse(storedUsuario);
-      }
+    if (tokenCookie.value) {
+      token.value = tokenCookie.value;
+    }
+    if (usuarioCookie.value) {
+      usuario.value = usuarioCookie.value;
     }
   };
 
-  // Guardar token
+  // Guardar token en cookies
   const setToken = (newToken: string, userData: any = null) => {
     token.value = newToken;
-    if (process.client) {
-      localStorage.setItem("auth_token", newToken);
-      if (userData) {
-        usuario.value = userData;
-        localStorage.setItem("auth_usuario", JSON.stringify(userData));
-      }
+    tokenCookie.value = newToken;
+
+    if (userData) {
+      usuario.value = userData;
+      usuarioCookie.value = userData;
     }
   };
 
@@ -37,37 +44,30 @@ export const useAuth = () => {
     if (!token.value) return null;
 
     try {
-      const response = await $fetch("/auth/me", {
+      const response = await $fetch<{ usuario: any }>("/auth/me", {
         baseURL: apiBase,
         headers: {
           Authorization: `Bearer ${token.value}`,
         },
       });
 
-      if (response.usuario) {
+      if (response?.usuario) {
         usuario.value = response.usuario;
-        if (process.client) {
-          localStorage.setItem(
-            "auth_usuario",
-            JSON.stringify(response.usuario),
-          );
-        }
+        usuarioCookie.value = response.usuario;
       }
-      return response.usuario;
+      return response?.usuario;
     } catch (error) {
       console.error("Error obteniendo usuario:", error);
       return null;
     }
   };
 
-  // Logout
+  // Logout - limpia cookies y estado
   const logout = () => {
     token.value = null;
     usuario.value = null;
-    if (process.client) {
-      localStorage.removeItem("auth_token");
-      localStorage.removeItem("auth_usuario");
-    }
+    tokenCookie.value = null;
+    usuarioCookie.value = null;
   };
 
   // Verificar si está autenticado

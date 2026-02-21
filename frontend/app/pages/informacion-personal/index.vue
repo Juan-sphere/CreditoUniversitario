@@ -64,12 +64,17 @@
       </template>
     </Information>
 
+    <!-- Loading Spinner mientras carga datos -->
+    <LoadingSpinner v-if="cargandoDatos" />
+
+    <!-- Contenido actual -->
     <Register
+      v-else
       :tabs="[
-        'Información adicional',
-        'Correo electrónico',
+        'Inf. Adicional',
+        'Correo Electrónico',
         'Dirección',
-        'Datos laborales',
+        'Datos Laborales',
       ]"
       :activeTab="activeTab"
       @tab-change="activeTab = $event"
@@ -82,8 +87,11 @@
               <label class="text-gray-700 font-semibold"
                 >Estado Civil <span class="text-red-500">(*)</span></label
               >
-              <select class="w-full px-3 py-1 border border-gray-300 rounded">
-                <option>--Seleccione--</option>
+              <select
+                v-model="estadoCivil"
+                class="w-full px-3 py-1 border border-gray-300 rounded"
+              >
+                <option value="">--Seleccione--</option>
                 <option>Soltero(a)</option>
                 <option>Casado(a)</option>
                 <option>Divorciado(a)</option>
@@ -94,10 +102,13 @@
               <label class="text-gray-700 font-semibold"
                 >Es conviviente? <span class="text-red-500">(*)</span></label
               >
-              <select class="w-full px-3 py-1 border border-gray-300 rounded">
-                <option>--Seleccione--</option>
-                <option>Sí</option>
-                <option>No</option>
+              <select
+                v-model="esConviviente"
+                class="w-full px-3 py-1 border border-gray-300 rounded"
+              >
+                <option value="">--Seleccione--</option>
+                <option value="true">Sí</option>
+                <option value="false">No</option>
               </select>
             </div>
             <div class="flex flex-col gap-2">
@@ -106,6 +117,7 @@
                 <span class="text-red-500">(*)</span></label
               >
               <input
+                v-model="fechaNacimiento"
                 type="date"
                 class="w-full px-3 py-1 border border-gray-300 rounded"
               />
@@ -119,8 +131,11 @@
               <label class="text-gray-700 font-semibold"
                 >Sexo <span class="text-red-500">(*)</span></label
               >
-              <select class="w-full px-3 py-1 border border-gray-300 rounded">
-                <option>--Seleccione--</option>
+              <select
+                v-model="sexo"
+                class="w-full px-3 py-1 border border-gray-300 rounded"
+              >
+                <option value="">--Seleccione--</option>
                 <option>Masculino</option>
                 <option>Femenino</option>
               </select>
@@ -130,17 +145,22 @@
                 >Telefono celular <span class="text-red-500">(*)</span></label
               >
               <input
-                type="number"
+                v-model="telefonoCelular"
+                type="text"
                 class="w-full px-3 py-1 border border-gray-300 rounded"
-                min="0"
                 required
               />
             </div>
           </div>
           <div class="w-full flex justify-between items-center mt-5">
             <CampoObligatorio />
-            <button type="submit" class="px-4 py-1 bg-terciary text-white">
-              Registrar
+            <button
+              type="button"
+              :disabled="!tab0Valido"
+              @click="guardarTab0"
+              class="px-4 py-1 bg-terciary text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Siguiente
             </button>
           </div>
         </div>
@@ -153,6 +173,7 @@
                 <span class="text-red-500">(*)</span></label
               >
               <input
+                v-model="correoPersonal"
                 type="email"
                 class="w-full px-3 py-1 border text-black border-gray-300 rounded"
                 placeholder="usuario@dominio.com"
@@ -165,6 +186,7 @@
                 <span class="text-red-500">(*)</span></label
               >
               <input
+                v-model="correoLaboral"
                 type="email"
                 class="w-full px-3 py-1 border border-gray-300 rounded"
                 placeholder="usuario@dominio.com"
@@ -174,8 +196,13 @@
           </div>
           <div class="w-full flex justify-between items-center mt-5">
             <CampoObligatorio />
-            <button type="submit" class="px-4 py-1 bg-terciary text-white">
-              Registrar
+            <button
+              type="button"
+              :disabled="!tab1Valido"
+              @click="guardarTab1"
+              class="px-4 py-1 bg-terciary text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Siguiente
             </button>
           </div>
         </div>
@@ -397,8 +424,13 @@
 
           <div class="w-full flex justify-between items-center mt-5">
             <CampoObligatorio />
-            <button type="submit" class="px-4 py-1 bg-terciary text-white">
-              Registrar
+            <button
+              type="button"
+              :disabled="!tab2Valido"
+              @click="guardarTab2"
+              class="px-4 py-1 bg-terciary text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Siguiente
             </button>
           </div>
         </div>
@@ -519,6 +551,7 @@
                 <span class="text-red-500">(*)</span></label
               >
               <input
+                v-model="ingresosMensuales"
                 type="number"
                 class="w-full px-3 py-1 border border-gray-300 rounded"
                 placeholder="Ej: 2500.00"
@@ -531,16 +564,39 @@
 
           <div class="w-full flex justify-between items-center mt-5 pl-2">
             <CampoObligatorio />
-            <button type="submit" class="px-4 py-1 bg-terciary text-white">
-              Registrar
+            <button
+              type="button"
+              :disabled="!tab3Valido"
+              @click="guardarTab3"
+              class="px-4 py-1 bg-terciary text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Siguiente
             </button>
           </div>
         </div>
       </template>
     </Register>
 
-    <div class="flex items-center justify-end mt-4">
-      <button class="px-4 py-1 bg-terciary text-white rounded">Grabar</button>
+    <div class="flex items-center justify-end gap-3 mt-4">
+      <p v-if="errorGuardado" class="text-sm text-red-600">
+        {{ errorGuardado }}
+      </p>
+      <button
+        type="button"
+        :disabled="guardando || !todoValido"
+        @click="guardarTodo"
+        class="px-6 py-1 bg-primary text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {{
+          guardando
+            ? esActualizacion
+              ? "Actualizando..."
+              : "Guardando..."
+            : esActualizacion
+              ? "Actualizar"
+              : "Guardar"
+        }}
+      </button>
     </div>
 
     <BackNext />
@@ -549,12 +605,26 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, nextTick, onMounted, markRaw } from "vue";
+import { toast } from "vue3-toastify";
+
+const config = useRuntimeConfig();
+const { token, loadToken } = useAuth();
+
+// Cookie directa para asegurar que siempre tenga el valor más reciente
+const tokenCookie = useCookie<string | null>("auth_token");
+
+// Cargar token desde cookies al inicializar
+loadToken();
 
 const activeTab = ref(0);
+const guardando = ref(false);
+const errorGuardado = ref("");
 const postulanteTrabaja = ref("");
 const tiposTrabajo = ref<string[]>([]);
+const esActualizacion = ref(false);
+const cargandoDatos = ref(true);
 
-// Campos de información personal
+// Campos de información personal (solo lectura, vienen del usuario autenticado)
 const apellidoPaterno = ref("");
 const apellidoMaterno = ref("");
 const nombre = ref("");
@@ -562,15 +632,148 @@ const segundoNombre = ref("");
 const dni = ref("");
 const correoUniversidad = ref("");
 
-// Campos de dirección
+// Tab 0: Información adicional
+const estadoCivil = ref("");
+const esConviviente = ref("");
+const fechaNacimiento = ref("");
+const sexo = ref("");
+const telefonoCelular = ref("");
+
+// Tab 1: Correo
+const correoPersonal = ref("");
+const correoLaboral = ref("");
+
+// Tab 2: Dirección
 const tipoVia = ref("");
 const nombreVia = ref("");
 const numeroVivienda = ref("");
 const urbanizacion = ref("");
 const distrito = ref("");
 
+// Tab 3: Datos laborales
+const ingresosMensuales = ref<number | null>(null);
+
 // Lugar de nacimiento
 const lugarNacimiento = ref("");
+
+// Validación por tab
+const tab0Valido = computed(
+  () =>
+    !!estadoCivil.value &&
+    esConviviente.value !== "" &&
+    !!fechaNacimiento.value &&
+    !!lugarNacimiento.value &&
+    !!sexo.value &&
+    !!telefonoCelular.value,
+);
+
+const tab1Valido = computed(
+  () => !!correoPersonal.value && !!correoLaboral.value,
+);
+
+const tab2Valido = computed(
+  () =>
+    !!tipoVia.value &&
+    !!nombreVia.value &&
+    !!numeroVivienda.value &&
+    !!urbanizacion.value &&
+    !!distrito.value,
+);
+
+const tab3Valido = computed(() => {
+  if (!postulanteTrabaja.value) return false;
+  if (postulanteTrabaja.value === "Si") {
+    return tiposTrabajo.value.length > 0 && ingresosMensuales.value !== null;
+  }
+  return true;
+});
+
+const todoValido = computed(
+  () =>
+    tab0Valido.value &&
+    tab1Valido.value &&
+    tab2Valido.value &&
+    tab3Valido.value,
+);
+
+// "Siguiente" solo valida y avanza al siguiente tab
+function guardarTab0() {
+  activeTab.value = 1;
+}
+function guardarTab1() {
+  activeTab.value = 2;
+}
+function guardarTab2() {
+  activeTab.value = 3;
+}
+function guardarTab3() {
+  /* queda en tab 3, esperar Guardar */
+}
+
+// "Guardar" envía todo a la API de una sola vez
+async function guardarTodo() {
+  guardando.value = true;
+  errorGuardado.value = "";
+
+  // Usar el token directamente de la cookie para asegurar el valor más reciente
+  const currentToken = tokenCookie.value;
+
+  if (!currentToken) {
+    errorGuardado.value =
+      "Sesión expirada. Por favor, inicia sesión nuevamente.";
+    guardando.value = false;
+    return;
+  }
+
+  console.log("[DEBUG] Token disponible:", currentToken ? "Sí" : "No");
+
+  try {
+    await $fetch("/auth/informacion-personal", {
+      baseURL: config.public.apiBase,
+      method: "POST",
+      headers: { Authorization: `Bearer ${currentToken}` },
+      body: {
+        estado_civil: estadoCivil.value || undefined,
+        es_conviviente:
+          esConviviente.value !== ""
+            ? esConviviente.value === "true"
+            : undefined,
+        fecha_nacimiento: fechaNacimiento.value || undefined,
+        lugar_nacimiento: lugarNacimiento.value || undefined,
+        sexo: sexo.value || undefined,
+        telefono_celular: telefonoCelular.value || undefined,
+        correo_personal: correoPersonal.value || undefined,
+        correo_laboral: correoLaboral.value || undefined,
+        tipo_via: tipoVia.value || undefined,
+        nombre_via: nombreVia.value || undefined,
+        numero_vivienda: numeroVivienda.value || undefined,
+        urbanizacion: urbanizacion.value || undefined,
+        distrito: distrito.value || undefined,
+        trabaja:
+          postulanteTrabaja.value !== ""
+            ? postulanteTrabaja.value === "Si"
+            : undefined,
+        tipo_trabajo: tiposTrabajo.value.length
+          ? tiposTrabajo.value.join(", ")
+          : undefined,
+        ingresos_mensuales: ingresosMensuales.value ?? undefined,
+      },
+    });
+    toast.success(
+      esActualizacion.value
+        ? "¡Información actualizada correctamente!"
+        : "¡Información guardada correctamente!",
+    );
+    esActualizacion.value = true;
+    setTimeout(() => navigateTo("/informacion-padres"), 1500);
+  } catch (e: any) {
+    const mensaje = e?.data?.detail || "Error al guardar. Intenta de nuevo.";
+    errorGuardado.value = mensaje;
+    toast.error(mensaje);
+  } finally {
+    guardando.value = false;
+  }
+}
 
 // Estado del buscador de dirección
 const sugerenciasDireccion = ref<any[]>([]);
@@ -596,7 +799,7 @@ const direccionQuery = computed(() => {
   return partes.length >= 2 ? partes.join(" ") : "";
 });
 
-onMounted(() => {
+onMounted(async () => {
   // Cargar datos del usuario autenticado
   const { usuario } = useAuth();
 
@@ -608,6 +811,57 @@ onMounted(() => {
     segundoNombre.value = usuario.value.segundo_nombre || "";
     dni.value = usuario.value.numero_documento || "";
     correoUniversidad.value = usuario.value.correo_universidad || "";
+  }
+
+  // Cargar información personal guardada previamente
+  const currentToken = tokenCookie.value;
+  if (currentToken) {
+    try {
+      const response = await $fetch<{ data: any }>(
+        "/auth/informacion-personal",
+        {
+          baseURL: config.public.apiBase,
+          method: "GET",
+          headers: { Authorization: `Bearer ${currentToken}` },
+        },
+      );
+
+      if (response.data) {
+        const info = response.data;
+        // Tab 0: Información adicional
+        estadoCivil.value = info.estado_civil || "";
+        esConviviente.value =
+          info.es_conviviente !== null ? String(info.es_conviviente) : "";
+        fechaNacimiento.value = info.fecha_nacimiento || "";
+        lugarNacimiento.value = info.lugar_nacimiento || "";
+        sexo.value = info.sexo || "";
+        telefonoCelular.value = info.telefono_celular || "";
+
+        // Tab 1: Correo
+        correoPersonal.value = info.correo_personal || "";
+        correoLaboral.value = info.correo_laboral || "";
+
+        // Tab 2: Dirección
+        tipoVia.value = info.tipo_via || "";
+        nombreVia.value = info.nombre_via || "";
+        numeroVivienda.value = info.numero_vivienda || "";
+        urbanizacion.value = info.urbanizacion || "";
+        distrito.value = info.distrito || "";
+
+        // Tab 3: Datos laborales
+        postulanteTrabaja.value =
+          info.trabaja !== null ? (info.trabaja ? "Si" : "No") : "";
+        if (info.tipo_trabajo && info.tipo_trabajo !== "No tiene") {
+          tiposTrabajo.value = info.tipo_trabajo.split(", ");
+        }
+        ingresosMensuales.value = info.ingresos_mensuales;
+
+        esActualizacion.value = true;
+        console.log("[INFO-PERSONAL] ✓ Datos cargados correctamente");
+      }
+    } catch (e) {
+      console.error("[INFO-PERSONAL] Error al cargar datos:", e);
+    }
   }
 
   // Cargar Google Maps
@@ -630,6 +884,9 @@ onMounted(() => {
       }
     }, 10000);
   }
+
+  // Datos cargados
+  cargandoDatos.value = false;
 });
 
 // Observar la concatenación y disparar búsqueda con debounce

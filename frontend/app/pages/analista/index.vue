@@ -399,7 +399,9 @@ onMounted(async () => {
 // ==================== FUNCIONES DE CARGA ====================
 async function cargarUniversidades() {
   try {
-    const response = await fetch("http://localhost:5000/auth/universidades");
+    const response = await fetch(
+      `${import.meta.env.NUXT_PUBLIC_API_BASE}/auth/universidades`,
+    );
     const data = await response.json();
     universidades.value = data;
   } catch (error) {
@@ -409,7 +411,9 @@ async function cargarUniversidades() {
 
 async function cargarEvaluadores() {
   try {
-    const response = await fetch("http://localhost:5000/auth/analistas");
+    const response = await fetch(
+      `${import.meta.env.NUXT_PUBLIC_API_BASE}/auth/analistas`,
+    );
     const data = await response.json();
     evaluadores.value = data;
   } catch (error) {

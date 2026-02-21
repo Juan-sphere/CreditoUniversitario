@@ -40,7 +40,7 @@
       <div class="relative" ref="dropdown">
         <button
           @click="toggleDropdown"
-          class="flex items-center gap-3 px-4 py-2 bg-primary/10 hover:bg-primary/20 rounded-lg transition"
+          class="flex items-center gap-3 px-3 py-1 hover:bg-primary/20 rounded-lg transition"
         >
           <!-- Icono de persona -->
           <div
@@ -62,7 +62,7 @@
             </svg>
           </div>
           <div class="text-left">
-            <div class="text-xs opacity-75">Bienvenido</div>
+            <div class="text-xs opacity-75">Bienvenid@</div>
             <div class="font-medium">{{ nombreUsuario }}</div>
           </div>
           <!-- Flecha -->
@@ -152,12 +152,15 @@ onUnmounted(() => {
 
 const nombreUsuario = computed(() => {
   if (!usuario.value) return "Usuario";
-  return usuario.value.nombres || "Usuario";
+  return (
+    `${usuario.value.nombre} ${usuario.value.apellido_paterno || ""}`.trim() ||
+    "Usuario"
+  );
 });
 
 const nombreCompleto = computed(() => {
   if (!usuario.value) return "";
-  return `${usuario.value.nombres} ${usuario.value.apellidos || ""}`.trim();
+  return `${usuario.value.nombre} ${usuario.value.apellidos || ""}`.trim();
 });
 
 const universidad = computed(() => {

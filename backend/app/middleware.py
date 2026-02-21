@@ -6,6 +6,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from app.config import es_ruta_publica
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class MiddlewareAutenticacion(BaseHTTPMiddleware):
@@ -16,17 +19,24 @@ class MiddlewareAutenticacion(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next):
         ruta = request.url.path
-        es_publica = es_ruta_publica(ruta)
-
-        # Registrar si es pública o privada
-        request.state.es_ruta_publica = es_publica
-
-        response = await call_next(request)
-        return response
+        metodo = request.method
+        
+        # LOG INMEDIATO
+        logger.warning(f"[MIDDLEWARE] ⬇️ SOLICITUD ENTRANTE: {metodo} {ruta}")
+        
+        try:
+            response = await call_next(request)
+            logger.warning(f"[MIDDLEWARE] ⬆️ RESPUESTA: {metodo} {ruta} - Status: {response.status_code}")
+            return response
+        except Exception as e:
+            logger.error(f"[MIDDLEWARE] ❌ Error en {metodo} {ruta}: {str(e)}", exc_info=True)
+            raise
 
 
 def setup_middleware(app):
     """Configurar todos los middleware de la aplicación"""
+
+    logger.info("Configurando middleware...")
 
     # Middleware personalizado de autenticación
     app.add_middleware(MiddlewareAutenticacion)
@@ -34,10 +44,10 @@ def setup_middleware(app):
     # CORS Middleware - Permitir solicitudes desde el frontend
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[
-            "*"
-        ],  # En producción, especificar dominio: ["https://tudominio.com"]
+        allow_origins=["*"],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    
+    logger.info("Middleware configurado correctamente")

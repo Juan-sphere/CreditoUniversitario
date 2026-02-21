@@ -11,7 +11,7 @@
       <img
         src="/images/logo.png"
         alt="ACCESSA"
-        class="h-24 object-contain drop-shadow-xl"
+        class="h-34 object-contain drop-shadow-xl"
       />
     </div>
 
@@ -33,6 +33,51 @@
 
       <!-- Formulario -->
       <form @submit.prevent="registrar" class="space-y-4">
+        <!-- DNI con autocompletado -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >DNI</label
+          >
+          <div class="relative">
+            <input
+              v-model="form.dni"
+              @input="buscarEstudiante"
+              type="text"
+              required
+              maxlength="8"
+              class="w-full pl-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white pr-10 text-sm"
+              placeholder="72695726"
+            />
+            <!-- Spinner de búsqueda -->
+            <div
+              v-if="buscandoDNI"
+              class="absolute right-3 top-1/2 transform -translate-y-1/2"
+            >
+              <div
+                class="w-5 h-5 border-2 border-green-500 border-t-transparent rounded-full animate-spin"
+              ></div>
+            </div>
+            <!-- Check verde si encontró -->
+            <svg
+              v-else-if="datosAutocompletados"
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-green-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              ></path>
+            </svg>
+          </div>
+          <p v-if="datosAutocompletados" class="mt-1 text-xs text-green-600">
+            ✓ Datos encontrados
+          </p>
+        </div>
+
         <!-- Universidad -->
         <div>
           <label
@@ -88,66 +133,19 @@
           </div>
         </div>
 
-        <!-- DNI con autocompletado -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1"
-              >DNI</label
-            >
-            <div class="relative">
-              <input
-                v-model="form.dni"
-                @input="buscarEstudiante"
-                type="text"
-                required
-                maxlength="8"
-                class="w-full pl-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white pr-10 text-sm"
-                placeholder="72695726"
-              />
-              <!-- Spinner de búsqueda -->
-              <div
-                v-if="buscandoDNI"
-                class="absolute right-3 top-1/2 transform -translate-y-1/2"
-              >
-                <div
-                  class="w-5 h-5 border-2 border-green-500 border-t-transparent rounded-full animate-spin"
-                ></div>
-              </div>
-              <!-- Check verde si encontró -->
-              <svg
-                v-else-if="datosAutocompletados"
-                class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-green-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 13l4 4L19 7"
-                ></path>
-              </svg>
-            </div>
-            <p v-if="datosAutocompletados" class="mt-1 text-xs text-green-600">
-              ✓ Datos encontrados
-            </p>
-          </div>
-
-          <!-- Email Universidad (autocompletado) -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1"
-              >Email Universidad</label
-            >
-            <input
-              v-model="form.correo"
-              type="email"
-              required
-              disabled
-              class="w-full px-3 py-2 border cursor-not-allowed border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 text-sm"
-              placeholder="tu@universidad.edu.pe"
-            />
-          </div>
+        <!-- Email Universidad (autocompletado) -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Email Universidad</label
+          >
+          <input
+            v-model="form.correo"
+            type="email"
+            required
+            disabled
+            class="w-full px-3 py-2 border cursor-not-allowed border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 text-sm"
+            placeholder="tu@universidad.edu.pe"
+          />
         </div>
 
         <!-- Nombre (solo lectura, autocompletado) -->
@@ -255,6 +253,8 @@
 import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 
+const config = useRuntimeConfig();
+
 definePageMeta({
   layout: false,
 });
@@ -289,7 +289,7 @@ const nombreCompleto = computed(() => {
 onMounted(async () => {
   loadingUniversidades.value = true;
   try {
-    const response = await fetch("http://localhost:5000/auth/universidades");
+    const response = await fetch(`${config.public.apiBase}/auth/universidades`);
     const data = await response.json();
     universidades.value = data;
   } catch (err) {
@@ -315,7 +315,7 @@ async function buscarEstudiante() {
   timeoutId = setTimeout(async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/auth/buscar-estudiante/${form.value.dni}`,
+        `${config.public.apiBase}/auth/buscar-estudiante/${form.value.dni}`,
       );
 
       if (response.ok) {
@@ -351,7 +351,7 @@ async function registrar() {
   loading.value = true;
 
   try {
-    const response = await fetch("http://localhost:5000/auth/registro", {
+    const response = await fetch(`${config.public.apiBase}/auth/registro`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

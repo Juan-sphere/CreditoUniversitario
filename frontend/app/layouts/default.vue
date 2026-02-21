@@ -15,21 +15,25 @@
 </template>
 
 <script setup lang="ts">
-import { RUTAS_PUBLICAS } from "~/utils/routes-config";
+import { RUTAS_PUBLICAS, PREFIJOS_PUBLICOS } from "~/utils/routes-config";
 
 const router = useRouter();
 const { isAuthenticated, loadToken } = useAuth();
 
 const isVerifying = ref(true);
 
+// Función para verificar si una ruta es pública
+const esRutaPublica = (path: string) => {
+  if (RUTAS_PUBLICAS.includes(path)) return true;
+  return PREFIJOS_PUBLICOS.some((prefijo) => path.startsWith(prefijo));
+};
+
 onMounted(async () => {
-  // Cargar token desde localStorage
+  // Cargar token desde cookies
   loadToken();
 
   // Verificar si es ruta pública
-  const esRutaPublica = RUTAS_PUBLICAS.includes(router.currentRoute.value.path);
-
-  if (esRutaPublica) {
+  if (esRutaPublica(router.currentRoute.value.path)) {
     isVerifying.value = false;
     return;
   }
