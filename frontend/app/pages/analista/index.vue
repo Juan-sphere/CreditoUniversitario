@@ -1,9 +1,9 @@
 <template>
   <!-- Contenido principal -->
-  <div class="pt-20 px-8 py-8">
+  <div class="pt-4 px-6 py-2">
     <!-- Título y controles -->
     <div class="flex items-center justify-between mb-6">
-      <h1 class="text-3xl font-bold text-gray-900">Postulaciones</h1>
+      <h1 class="text-xl font-bold" style="color: #02b0e2">Postulaciones</h1>
 
       <!-- Selector de filas por página -->
       <div class="flex items-center gap-2">
@@ -22,7 +22,7 @@
 
     <!-- Filtros -->
     <div class="mb-6">
-      <h2 class="text-lg font-semibold mb-4">Filtros</h2>
+      <h2 class="text-lg font-semibold mb-4" style="color: #02b0e2">Filtros</h2>
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <!-- Nombre -->
         <div>
@@ -516,7 +516,7 @@ function fechaLimiteClass(fecha: string) {
 
 function resultadoBadge(resultado: string) {
   const badges: Record<string, string> = {
-    no_revisada: "bg-yellow-100 text-yellow-800",
+    no_revisada: "text-white",
     aprobado: "bg-green-100 text-green-800",
     denegado: "bg-red-100 text-red-800",
   };

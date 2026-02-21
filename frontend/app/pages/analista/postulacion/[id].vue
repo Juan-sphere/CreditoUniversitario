@@ -1,6 +1,6 @@
 <template>
   <!-- Contenido principal -->
-  <div class="pt-20 px-8 py-8 max-w-7xl mx-auto">
+  <div class="pt-4 px-6 py-2">
     <!-- Botón volver -->
     <button
       @click="volver"
@@ -56,7 +56,7 @@
       <div class="border-b pb-4">
         <div class="flex items-center justify-between mb-4">
           <div>
-            <h1 class="text-2xl font-bold text-gray-900">
+            <h1 class="text-xl font-bold" style="color: #02b0e2">
               {{ postulacion.codigo_postulacion }}
             </h1>
             <p class="text-sm text-gray-500">
@@ -108,9 +108,14 @@
             :class="[
               'px-4 py-3 text-sm font-medium border-b-2 transition-colors',
               tabActiva === tab.id
-                ? 'border-blue-600 text-blue-600'
+                ? 'text-white'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
             ]"
+            :style="
+              tabActiva === tab.id
+                ? 'background-color: #02b0e2; border-color: #02b0e2'
+                : ''
+            "
           >
             {{ tab.label }}
           </button>
@@ -121,7 +126,7 @@
       <div class="py-6">
         <!-- 1. Información del Postulante -->
         <div v-if="tabActiva === 'informacion'" class="space-y-6">
-          <h2 class="text-xl font-bold text-gray-900">
+          <h2 class="text-xl font-bold" style="color: #02b0e2">
             Información del Postulante
           </h2>
           <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
@@ -184,7 +189,9 @@
 
         <!-- 2. Datos de los Padres -->
         <div v-if="tabActiva === 'padres'" class="space-y-6">
-          <h2 class="text-xl font-bold text-gray-900">Datos de los Padres</h2>
+          <h2 class="text-xl font-bold" style="color: #02b0e2">
+            Datos de los Padres
+          </h2>
 
           <!-- Padre -->
           <div>
@@ -267,7 +274,7 @@
 
         <!-- 3. Composición del Núcleo Familiar -->
         <div v-if="tabActiva === 'familia'" class="space-y-6">
-          <h2 class="text-xl font-bold text-gray-900">
+          <h2 class="text-xl font-bold" style="color: #02b0e2">
             Composición del Núcleo Familiar
           </h2>
 
@@ -329,7 +336,7 @@
 
         <!-- 4. Personas que Contribuyen -->
         <div v-if="tabActiva === 'contribuyentes'" class="space-y-6">
-          <h2 class="text-xl font-bold text-gray-900">
+          <h2 class="text-xl font-bold" style="color: #02b0e2">
             Personas que Contribuyen con la Economía
           </h2>
 
@@ -379,7 +386,7 @@
 
         <!-- 5. Información Económica -->
         <div v-if="tabActiva === 'economia'" class="space-y-6">
-          <h2 class="text-xl font-bold text-gray-900">
+          <h2 class="text-xl font-bold" style="color: #02b0e2">
             Información Económica del Núcleo Familiar
           </h2>
 
@@ -474,7 +481,7 @@
 
         <!-- 6. Patrimonio -->
         <div v-if="tabActiva === 'patrimonio'" class="space-y-6">
-          <h2 class="text-xl font-bold text-gray-900">
+          <h2 class="text-xl font-bold" style="color: #02b0e2">
             Patrimonio del Núcleo Familiar
           </h2>
 
@@ -517,7 +524,7 @@
 
         <!-- 7. Documentos de Sustentación -->
         <div v-if="tabActiva === 'documentos'" class="space-y-6">
-          <h2 class="text-xl font-bold text-gray-900">
+          <h2 class="text-xl font-bold" style="color: #02b0e2">
             Documentos de Sustentación
           </h2>
 
@@ -560,7 +567,7 @@
 
       <!-- Análisis del Evaluador -->
       <div class="border-t pt-6 mt-6">
-        <h2 class="text-xl font-bold text-gray-900 mb-4">
+        <h2 class="text-xl font-bold" style="color: #02b0e2">
           Análisis del Evaluador
         </h2>
 
@@ -632,7 +639,8 @@
           <button
             @click="aprobar"
             :disabled="guardando"
-            class="flex-1 bg-green-600 text-white px-6 py-4 rounded-lg font-semibold hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            class="flex-1 text-white px-6 py-4 rounded-lg font-semibold hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            style="background-color: #91c853"
           >
             <span v-if="!guardando">✓ APROBAR POSTULACIÓN</span>
             <span v-else>Guardando...</span>
@@ -902,7 +910,7 @@ function calcularTotalGastos() {
 
 function estadoBadge(estado: string) {
   const badges: Record<string, string> = {
-    no_revisada: "bg-yellow-100 text-yellow-800",
+    no_revisada: "text-white",
     aprobado: "bg-green-100 text-green-800",
     denegado: "bg-red-100 text-red-800",
   };
